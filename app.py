@@ -46,7 +46,7 @@ if __name__ == '__main__':
 		(r'/', App),
 		(r'/endpoint', Endpoint),
 		(r'/data', Data, { 'data_sources': [ MockImageDataSource() ] }),
-		(r'/((?:font|css|js|stylesheets)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
+		(r'/((?:fonts|css|js|stylesheets)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
 	], debug=True)
 
 	app.listen(8008)
