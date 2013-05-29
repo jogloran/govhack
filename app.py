@@ -99,7 +99,7 @@ if __name__ == '__main__':
 		(r'/', App),
 		(r'/endpoint', Endpoint),
 		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), MockGraphDataSource(), MockMediaDataSource() ] }),
-		(r'/((?:fonts|css|js|stylesheets)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
+		(r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
 		(r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
 		(r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),		
 	], debug=True)
