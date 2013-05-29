@@ -1,0 +1,29 @@
+<div class="navbar">
+	<div class="navbar-inner">
+		<a href="#" class="brand">Browser</a>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span2 well">
+			<div ng-repeat='item in items'>
+				<div ng-switch='item.type'>
+					<div ng-switch-when='image'>
+						<ng-include src="'_image_cell.html'"></ng-include>
+					</div>
+					<div ng-switch-when='text'>
+						<ng-include src="'_text_cell.html'"></ng-include>
+					</div>
+					<div ng-switch-when='graph'>
+						<ng-include src="'_graph_cell.html'"></ng-include>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="span10 well">
+			Test
+		</div>
+	</div>	
+</div>
+

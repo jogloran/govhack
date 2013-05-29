@@ -11,9 +11,43 @@
 
 	<link href='fonts/stylesheet.css' rel='stylesheet' media='screen'></link>
 
+	<style type='text/css'>
+.thumbnail {
+	width: 32px;
+	height: 32px;
+}
+table td:nth-child(1) {
+	padding-right: 6px;
+	width: 42px;
+}
+
+table td {
+	background-color: #45515f;
+
+	font-size: 14pt;
+	line-height: 1.3;
+}
+
+table td {
+	padding-bottom: 8px;
+}
+
+body {
+	font-family: 'Oswald';
+}
+	</style>
+
 	<script src='js/AppController.js'></script>
+	<script src='js/BrowserController.js'></script>
 </head>
 <body ng-controller='AppController' ng-app='App'>
-	<h2 style='font-family: "League Gothic"'>{{world}}</h2>
+<div ng-switch='currentUnit'>
+	<div ng-switch-when='-1'>
+		<ng-include src="'_unit_selector.html'"></ng-include>
+	</div>
+	<div ng-switch-default>
+		<ng-include src="'_browser.html'" ng-controller='BrowserController'></ng-include>
+	</div>
+</div>
 </body>
 </html>

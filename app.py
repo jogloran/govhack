@@ -21,7 +21,30 @@ class MockImageDataSource(DataSource):
 	def make_json(self):
 		return [{
 			'type': 'image',
+			'title': 'A mock image',
+			'subtitle': 'Subtitle',
 			'url': 'http://i2.kym-cdn.com/photos/images/original/000/236/809/956.png',
+		},
+		{
+			'type': 'image',
+			'title': 'A mock image',
+			'subtitle': 'Subtitle',
+			'url': 'http://i2.kym-cdn.com/photos/images/original/000/236/809/956.png',
+		}]
+
+class MockTextDataSource(DataSource):
+	def make_json(self):
+		return [{
+			'type': 'text',
+			'title': 'A mock item',
+			'subtitle': 'Subtitle',
+			'html': '<strong>test</strong>',
+		},
+		{
+			'type': 'text',
+			'title': 'Another mock text item',
+			'subtitle': 'Subtitle',
+			'html': '<u>another</u>',
 		}]
 
 class Data(tornado.web.RequestHandler):
@@ -41,12 +64,17 @@ class App(tornado.web.RequestHandler):
         self.write(file('index.html').read())
         self.finish()
 
+class StaticFileHandler(tornado.web.StaticFileHandler):
+    def set_extra_headers(self, path):
+        self.set_header("Cache-control", "no-cache")
+
 if __name__ == '__main__':
 	app = tornado.web.Application([
 		(r'/', App),
 		(r'/endpoint', Endpoint),
-		(r'/data', Data, { 'data_sources': [ MockImageDataSource() ] }),
+		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource() ] }),
 		(r'/((?:fonts|css|js|stylesheets)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
+		(r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
 	], debug=True)
 
 	app.listen(8008)
