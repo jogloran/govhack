@@ -24,12 +24,14 @@ class MockImageDataSource(DataSource):
 			'title': 'A mock image',
 			'subtitle': 'Subtitle',
 			'url': 'http://i2.kym-cdn.com/photos/images/original/000/236/809/956.png',
+			'timestamp': '2013-05-28T13:29Z',
 		},
 		{
 			'type': 'image',
 			'title': 'A mock image',
 			'subtitle': 'Subtitle',
 			'url': 'http://i2.kym-cdn.com/photos/images/original/000/236/809/956.png',
+			'timestamp': '2013-05-28T13:29Z',
 		}]
 
 class MockTextDataSource(DataSource):
@@ -39,12 +41,24 @@ class MockTextDataSource(DataSource):
 			'title': 'A mock item',
 			'subtitle': 'Subtitle',
 			'html': '<strong>test</strong>',
+			'timestamp': '2013-05-28T13:29Z',
 		},
 		{
 			'type': 'text',
 			'title': 'Another mock text item',
 			'subtitle': 'Subtitle',
 			'html': '<u>another</u>',
+			'timestamp': '2013-05-28T13:29Z',
+		}]
+
+class MockGraphDataSource(DataSource):
+	def make_json(self):
+		return [{
+			'type': 'graph',
+			'title': 'A mock graph',
+			'subtitle': 'Subtitle',
+			'datapoints': [[1983, 3], [1984, 4], [1985, 3], [1986, 2]],
+			'timestamp': '2013-05-28T13:29Z',
 		}]
 
 class Data(tornado.web.RequestHandler):
@@ -72,7 +86,7 @@ if __name__ == '__main__':
 	app = tornado.web.Application([
 		(r'/', App),
 		(r'/endpoint', Endpoint),
-		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource() ] }),
+		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), MockGraphDataSource() ] }),
 		(r'/((?:fonts|css|js|stylesheets)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
 		(r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
 	], debug=True)
