@@ -5,15 +5,11 @@
 	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen">
 	<script src="js/jquery-1.9.1.min.js"></script>
 	<script src="js/mousetrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-sanitize.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.min.js"></script>
 	<script src="http://ci.angularjs.org/job/angularui-bootstrap/ws/dist/ui-bootstrap-tpls-0.4.0-SNAPSHOT.js"></script>
 
 	<link href='fonts/stylesheet.css' rel='stylesheet' media='screen'></link>
-
-	<script>
-	
-	</script>
 
 	<style type='text/css'>
 .thumbnail {
@@ -47,6 +43,29 @@ body {
 
 .selected td {
 	background-color: #bc7653;
+}
+
+.appear, .hide {
+	-webkit-transition: 0.3s linear all; /* Safari/Chrome */
+     -moz-transition: 0.3s linear all; /* Firefox */
+     -ms-transition: 0.3s linear all; /* IE10 */
+     -o-transition: 0.3s linear all; /* Opera */
+     transition: 0.3s linear all; /* Future Browsers */
+}
+
+.appear {
+	opacity: 0;
+}
+.appear.appear-active {
+	opacity: 1;
+}
+.hide {
+	opacity: 1;
+}
+.hide.hide-active {
+	opacity: 0;
+}
+body {
 }
 	</style>
 

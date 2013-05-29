@@ -35,6 +35,16 @@ class MockImageDataSource(DataSource):
 			'timestamp': '2013-05-28T13:29Z',
 		}]
 
+class MockMediaDataSource(DataSource):
+	def make_json(self):
+		return [{
+			'type': 'media',
+			'title': 'An audio item',
+			'subtitle': 'Listen to it',
+			'timestamp': '2013-05-28T13:29Z',
+			'url': 'test.mp3'
+		}]
+
 class MockTextDataSource(DataSource):
 	def make_json(self):
 		return [{
@@ -88,9 +98,10 @@ if __name__ == '__main__':
 	app = tornado.web.Application([
 		(r'/', App),
 		(r'/endpoint', Endpoint),
-		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), MockGraphDataSource() ] }),
+		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), MockGraphDataSource(), MockMediaDataSource() ] }),
 		(r'/((?:fonts|css|js|stylesheets)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
 		(r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
+		(r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),		
 	], debug=True)
 
 	app.listen(8008)

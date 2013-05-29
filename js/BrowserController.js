@@ -3,6 +3,7 @@ function BrowserController($scope, $http) {
 	$scope.currentItem = null;
 
 	$scope.$watch('selectedIndex', function(newValue, oldValue) {
+		console.log('watcher');
 		if ($scope.items) {
 			$scope.currentItem = $scope.items[newValue];
 		}
@@ -18,6 +19,8 @@ function BrowserController($scope, $http) {
 			if (scope.selectedIndex > 0) {
 				scope.selectedIndex--;
 			}
+
+			parallax.panel.left();
 		});
 	});
 	Mousetrap.bind('right', function(e) {
@@ -25,6 +28,8 @@ function BrowserController($scope, $http) {
 			if (scope.selectedIndex < scope.items.length - 1) {
 				scope.selectedIndex++;
 			}
+
+			parallax.panel.right();
 		});
 	});
 }
