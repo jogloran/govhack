@@ -8,21 +8,33 @@
 	<div class="row-fluid">
 		<div class="span2 well">
 			<div ng-repeat='item in items'>
-				<div ng-switch='item.type'>
-					<div ng-switch-when='image'>
-						<ng-include src="'_image_cell.html'"></ng-include>
-					</div>
-					<div ng-switch-when='text'>
-						<ng-include src="'_text_cell.html'"></ng-include>
-					</div>
-					<div ng-switch-when='graph'>
-						<ng-include src="'_graph_cell.html'"></ng-include>
+				<div ng-class='{ selected: selectedIndex == $index }'>
+					<div ng-switch='item.type'>
+						<div ng-switch-when='image'>
+							<ng-include src="'_image_cell.html'"></ng-include>
+						</div>
+						<div ng-switch-when='text'>
+							<ng-include src="'_text_cell.html'"></ng-include>
+						</div>
+						<div ng-switch-when='graph'>
+							<ng-include src="'_graph_cell.html'"></ng-include>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="span10 well">
-			Test
+			<div ng-switch='currentItem.type'>
+				<div ng-switch-when='image'>
+					<ng-include src="'_image_body.html'"></ng-include>
+				</div>
+				<div ng-switch-when='text'>
+					<ng-include src="'_text_body.html'"></ng-include>
+				</div>
+				<div ng-switch-when='graph'>
+					<ng-include src="'_graph_body.html'"></ng-include>
+				</div>
+			</div>
 		</div>
 	</div>	
 </div>
