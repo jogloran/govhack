@@ -24,14 +24,14 @@ class MockImageDataSource(DataSource):
 			'type': 'image',
 			'title': 'A mock image',
 			'subtitle': 'Subtitle',
-			'url': 'http://i2.kym-cdn.com/photos/images/original/000/236/809/956.png',
+			'url': 'http://farm8.staticflickr.com/7284/8736071763_e4a5f89764_o.jpg',
 			'timestamp': '2013-05-28T13:29Z',
 		},
 		{
 			'type': 'image',
 			'title': 'A mock image',
 			'subtitle': 'Subtitle',
-			'url': 'http://i2.kym-cdn.com/photos/images/original/000/236/809/956.png',
+			'url': 'http://farm6.staticflickr.com/5341/8778803810_a743321a0f_o.jpg',
 			'timestamp': '2013-05-28T13:29Z',
 		}]
 
