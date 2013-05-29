@@ -4,6 +4,7 @@ import abc
 import tornado
 import tornado.web
 import tornado.ioloop
+import tornado.options
 
 class Endpoint(tornado.web.RequestHandler):
     def get(self):
@@ -83,6 +84,7 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
         self.set_header("Cache-control", "no-cache")
 
 if __name__ == '__main__':
+	tornado.options.parse_command_line()
 	app = tornado.web.Application([
 		(r'/', App),
 		(r'/endpoint', Endpoint),
