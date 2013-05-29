@@ -52,3 +52,14 @@ table td {
 .other-icons {
   padding: 0 12px;
 }
+
+/* line 52, ../sass/app.scss */
+.modal {
+  width: 90%;
+  margin-left: -45%;
+}
+
+/* line 57, ../sass/app.scss */
+.modal-body {
+  max-height: 90%;
+}

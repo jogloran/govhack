@@ -47,3 +47,13 @@ table td {
 .other-icons {
 	padding: 0 12px;
 }
+
+$modal-width: 90%;
+.modal {
+	width: $modal-width;
+	margin-left: -$modal-width/2;
+}
+
+.modal-body {
+	max-height: 90%;
+}

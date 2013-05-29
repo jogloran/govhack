@@ -8,7 +8,15 @@
 				</div>
 			</div>
 			<div class="pull-right other-icons">
-				<button class="btn btn-large btn-success" type='button'><i class="icon-book"></i></button>
+				<button class="btn btn-large btn-success" type='button' ng-click='displayDialog()'><i class="icon-book"></i></button>
+				<div modal='timelineShown' close='close()'>
+					<div class="modal-body">
+						<div id="timeline-embed"></div>
+					</div>
+					<div class="modal-footer">
+			            <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+			        </div>
+				</div>
 			</div>
 			<a href="#" class="brand">Our History<img id='masthead-aus-image' src="images/aus.png" alt="Australia"></a>			
 		</div>
@@ -56,4 +64,3 @@
 		</div>
 	</div>	
 </div>
-
