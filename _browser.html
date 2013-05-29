@@ -1,13 +1,25 @@
 <div class="navbar">
 	<div class="navbar-inner">
-		<a href="#" class="brand">Our History<img id='masthead-aus-image' src="images/aus.png" alt="Australia"></a>
+		<div class="container">
+			<div class="pull-right navbar-search">
+				<div class="input-prepend">
+				  <span class="add-on">Find</span>
+				  <input type="text" ng-model='filterQuery' placeholder="type something here to find it"/>
+				</div>
+			</div>
+			<div class="pull-right other-icons">
+				<button class="btn btn-large btn-success" type='button'><i class="icon-book"></i></button>
+			</div>
+			<a href="#" class="brand">Our History<img id='masthead-aus-image' src="images/aus.png" alt="Australia"></a>			
+		</div>
+
 	</div>
 </div>
 
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span2 well">
-			<div ng-repeat='item in items' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
+			<div ng-repeat='item in items | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
 				<div ng-class='{ selected: selectedIndex == $index }'>
 					<div ng-switch='item.type'>
 						<div ng-switch-when='image'>

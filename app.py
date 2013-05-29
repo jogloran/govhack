@@ -98,7 +98,7 @@ if __name__ == '__main__':
 	app = tornado.web.Application([
 		(r'/', App),
 		(r'/endpoint', Endpoint),
-		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), MockGraphDataSource(), MockMediaDataSource() ] }),
+		(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), MockGraphDataSource(), MockMediaDataSource(), MockImageDataSource(), MockTextDataSource(), MockGraphDataSource(), MockMediaDataSource() ] }),
 		(r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
 		(r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
 		(r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),		

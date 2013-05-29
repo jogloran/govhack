@@ -1,3 +1,5 @@
+@import "compass/css3";
+
 $bg-color: #3cb9c6;
 $selected-color: darken($bg-color, 20%);
 .selected {
@@ -29,4 +31,19 @@ table td {
 	width: 28px;
 	height: 28px;
 	padding-left: 8px;
+}
+
+.image-body {
+	@include box-shadow(4px 6px 12px rgba(0, 0, 0, 0.7));
+}
+
+.image-caption {
+	margin-top: 16px;
+	padding: 8px 4px;
+
+	font-weight: bold;
+}
+
+.other-icons {
+	padding: 0 12px;
 }
