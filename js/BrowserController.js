@@ -2,6 +2,8 @@ function BrowserController($scope, $http) {
 	$scope.selectedIndex = 0;
 	$scope.currentItem = null;
 
+	$scope.addedItems = [];
+
 	$scope.filterQuery = null;
 
 	$scope.resultFilter = function(e) {

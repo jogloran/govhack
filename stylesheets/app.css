@@ -4,51 +4,66 @@
 }
 
 /* line 9, ../sass/app.scss */
+.added {
+  position: relative;
+  top: 8px;
+  left: 6px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  font-size: 16pt;
+  padding: 4px 6px;
+  background-color: red;
+}
+
+/* line 21, ../sass/app.scss */
 .selected td {
   background-color: #237179;
 }
 
-/* line 13, ../sass/app.scss */
+/* line 25, ../sass/app.scss */
 table td:nth-child(1) {
   padding-right: 6px;
   width: 42px;
 }
 
-/* line 18, ../sass/app.scss */
+/* line 30, ../sass/app.scss */
 table td {
   background-color: #3cb9c6;
   font-size: 14pt;
   line-height: 1.3;
 }
 
-/* line 25, ../sass/app.scss */
+/* line 37, ../sass/app.scss */
 table td {
   padding-bottom: 8px;
   padding: 8px;
 }
 
-/* line 30, ../sass/app.scss */
+/* line 42, ../sass/app.scss */
 #masthead-aus-image {
   width: 28px;
   height: 28px;
   padding-left: 8px;
 }
 
-/* line 36, ../sass/app.scss */
+/* line 48, ../sass/app.scss */
 .image-body {
   -webkit-box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.7);
   box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.7);
 }
 
-/* line 40, ../sass/app.scss */
+/* line 52, ../sass/app.scss */
 .image-caption {
   margin-top: 16px;
   padding: 8px 4px;
   font-weight: bold;
 }
 
-/* line 47, ../sass/app.scss */
+/* line 59, ../sass/app.scss */
 .other-icons {
   padding: 0 12px;
 }

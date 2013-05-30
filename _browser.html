@@ -21,7 +21,10 @@
 		<div class="span2 well">
 			<div ng-repeat='item in items | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
 				<div ng-class='{ selected: selectedIndex == $index }'>
-					<div ng-switch='item.type'>
+					<span class='pull-right' ng-show='addedItems.indexOf(item) != -1' ng-class='{ added: addedItems.indexOf(item) != -1 }'>
+						<i class="icon-plus"></i>
+					</span>
+					<span ng-switch='item.type'>
 						<div ng-switch-when='image'>
 							<ng-include src="'_image_cell.html'" ng-animate='"appear"'></ng-include>
 						</div>
@@ -34,11 +37,21 @@
 						<div ng-switch-when='media'>
 							<ng-include src="'_media_cell.html'" ng-animate='"appear"'></ng-include>
 						</div>
-					</div>
+					</span>
 				</div>
 			</div>
 		</div>
 		<div class="span10 well">
+			<div class="pull-right">
+				<div ng-switch='addedItems.indexOf(currentItem) == -1'>
+					<div ng-switch-when='true'>
+						<a class="btn btn-primary" ng-click='addedItems.push(currentItem)'>Add to my timeline</a>
+					</div>
+					<div ng-switch-default>
+						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1)'>Remove from my timeline</a>
+					</div>
+				</div>
+			</div>
 			<div ng-switch='currentItem.type'>
 				<div ng-switch-when='image'>
 					<ng-include src="'_image_body.html'" ng-animate='{ enter: "appear", leave: "hide" }'></ng-include>

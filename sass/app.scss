@@ -6,6 +6,18 @@ $selected-color: darken($bg-color, 20%);
 	background-color: $selected-color;
 }
 
+.added {
+	position: relative;
+	top: 8px;
+	left: 6px;
+
+	@include border-radius(8px);
+	font-size: 16pt;
+	padding: 4px 6px;
+
+	background-color: red;
+}
+
 .selected td {
 	background-color: $selected-color;
 }
