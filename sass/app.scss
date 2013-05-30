@@ -6,6 +6,10 @@ $selected-color: darken($bg-color, 20%);
 	background-color: $selected-color;
 }
 
+.affix {
+	top: 0px;
+}
+
 .added {
 	position: relative;
 	top: 8px;
@@ -103,3 +107,4 @@ table td {
 .hide.hide-active {
 	opacity: 0;
 }
+
