@@ -18,10 +18,10 @@
 
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span2 well">
+		<div class="span3 well">
 			<div ng-repeat='item in items | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
 				<div ng-class='{ selected: selectedIndex == $index }'>
-					<span class='pull-right' ng-show='addedItems.indexOf(item) != -1' ng-class='{ added: addedItems.indexOf(item) != -1 }'>
+					<span class='pull-right added-icon added' ng-show='addedItems.indexOf(item) != -1' ng-animate='{ show: "zoom", hide: "unzoom" }'>
 						<i class="icon-plus"></i>
 					</span>
 					<span ng-switch='item.type'>
@@ -41,14 +41,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="span10 well">
+		<div class="span9 well">
 			<div class="pull-right">
 				<div ng-switch='addedItems.indexOf(currentItem) == -1'>
 					<div ng-switch-when='true'>
-						<a class="btn btn-primary" ng-click='addedItems.push(currentItem)'>Add to my timeline</a>
+						<a class="btn btn-primary" ng-click='addedItems.push(currentItem)'><i class="icon-plus"></i> Add to timeline</a>
 					</div>
 					<div ng-switch-default>
-						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1)'>Remove from my timeline</a>
+						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1)'><i class="icon-minus"></i> Remove from timeline</a>
 					</div>
 				</div>
 			</div>

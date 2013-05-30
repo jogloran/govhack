@@ -59,3 +59,47 @@ table td {
 .other-icons {
 	padding: 0 12px;
 }
+
+.added-icon {
+
+}
+
+.zoom {
+	@include transition(0.3s ease-out all);
+}
+.unzoom {
+	@include transition(0.2s ease-in all);	
+}
+.zoom {
+	@include transform(rotate(40deg) scale(4, 4));
+	opacity: 0.3;
+}
+.zoom.zoom-active {
+	@include transform(rotate(0deg) scale(1.0, 1.0));
+	opacity: 1.0;
+}
+.unzoom {
+	@include transform(rotate(0deg) scale(1.0, 1.0));
+	opacity: 1.0;
+}
+.unzoom.unzoom-active {
+	@include transform(rotate(40deg) scale(3, 3));
+	opacity: 0.3;
+}
+
+.appear, .hide {
+     @include transition(0.3s linear all);
+}
+
+.appear {
+	opacity: 0;
+}
+.appear.appear-active {
+	opacity: 1;
+}
+.hide {
+	opacity: 1;
+}
+.hide.hide-active {
+	opacity: 0;
+}

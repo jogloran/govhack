@@ -67,3 +67,87 @@ table td {
 .other-icons {
   padding: 0 12px;
 }
+
+/* line 67, ../sass/app.scss */
+.zoom {
+  -webkit-transition: 0.3s ease-out all;
+  -moz-transition: 0.3s ease-out all;
+  -o-transition: 0.3s ease-out all;
+  transition: 0.3s ease-out all;
+}
+
+/* line 70, ../sass/app.scss */
+.unzoom {
+  -webkit-transition: 0.2s ease-in all;
+  -moz-transition: 0.2s ease-in all;
+  -o-transition: 0.2s ease-in all;
+  transition: 0.2s ease-in all;
+}
+
+/* line 73, ../sass/app.scss */
+.zoom {
+  -webkit-transform: rotate(40deg) scale(4, 4);
+  -moz-transform: rotate(40deg) scale(4, 4);
+  -ms-transform: rotate(40deg) scale(4, 4);
+  -o-transform: rotate(40deg) scale(4, 4);
+  transform: rotate(40deg) scale(4, 4);
+  opacity: 0.3;
+}
+
+/* line 77, ../sass/app.scss */
+.zoom.zoom-active {
+  -webkit-transform: rotate(0deg) scale(1, 1);
+  -moz-transform: rotate(0deg) scale(1, 1);
+  -ms-transform: rotate(0deg) scale(1, 1);
+  -o-transform: rotate(0deg) scale(1, 1);
+  transform: rotate(0deg) scale(1, 1);
+  opacity: 1.0;
+}
+
+/* line 81, ../sass/app.scss */
+.unzoom {
+  -webkit-transform: rotate(0deg) scale(1, 1);
+  -moz-transform: rotate(0deg) scale(1, 1);
+  -ms-transform: rotate(0deg) scale(1, 1);
+  -o-transform: rotate(0deg) scale(1, 1);
+  transform: rotate(0deg) scale(1, 1);
+  opacity: 1.0;
+}
+
+/* line 85, ../sass/app.scss */
+.unzoom.unzoom-active {
+  -webkit-transform: rotate(40deg) scale(3, 3);
+  -moz-transform: rotate(40deg) scale(3, 3);
+  -ms-transform: rotate(40deg) scale(3, 3);
+  -o-transform: rotate(40deg) scale(3, 3);
+  transform: rotate(40deg) scale(3, 3);
+  opacity: 0.3;
+}
+
+/* line 90, ../sass/app.scss */
+.appear, .hide {
+  -webkit-transition: 0.3s linear all;
+  -moz-transition: 0.3s linear all;
+  -o-transition: 0.3s linear all;
+  transition: 0.3s linear all;
+}
+
+/* line 94, ../sass/app.scss */
+.appear {
+  opacity: 0;
+}
+
+/* line 97, ../sass/app.scss */
+.appear.appear-active {
+  opacity: 1;
+}
+
+/* line 100, ../sass/app.scss */
+.hide {
+  opacity: 1;
+}
+
+/* line 103, ../sass/app.scss */
+.hide.hide-active {
+  opacity: 0;
+}
