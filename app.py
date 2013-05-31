@@ -6,6 +6,76 @@ import tornado.web
 import tornado.ioloop
 import tornado.options
 
+import json
+import urllib2
+
+def queryTroveUrl(zone, searchTerms):
+	results = []
+	for i in range(0,5):
+		data = json.load(urllib2.urlopen('http://api.trove.nla.gov.au/result?key=5gj3f7pp9b5c0ath&zone='+zone+'&q='+searchTerms+'&encoding=json&s='+str(i*20)))
+		response = data['response']
+		z = response['zone']
+		for rec in z:
+			records = rec['records']
+			if 'next' not in records:
+				i = 6
+			work = records['work']
+			for item in work:
+				results.append(item)
+
+	return results
+
+def queryTroveImages(query):
+	work = queryTroveUrl('picture', query)
+	results = []
+        for item in work:
+        	current = {}
+                current['type'] = 'image'
+                current['title'] = item['title']
+                current['subtitle'] = ''
+                current['timestamp'] = ''
+                if "identifier" in item:
+                       	dict = item["identifier"]
+                       	for id in dict:
+                               	#these only have 1 url, so we only add them if they actually have a url
+                               	current['url'] = id['value']
+				if 'linktype' in id:
+					if id['linktype'] == 'thumbnail':
+                               			results.append(current)	
+	return results
+
+def queryTroveBooks(query):
+	work = queryTroveUrl('book', query)	
+	results = []
+        for item in work:
+             	current = {}
+                current['type'] = 'text'
+                current['title'] = item['title']
+		if 'contributor' in item:
+                	current['subtitle'] = item['contributor']
+		if 'issued' in item:
+                	current['timestamp'] = item['issued']
+		if 'snippet' in item:
+			current['snippet'] = item['snippet']
+		if 'type' in item:
+			type = item['type'] #type is an list
+			for t in type:
+				if t == 'Book':
+					results.append(current)
+
+	return results
+
+def queryTroveMedia(query):
+	work = queryTroveUrl('music', query)
+	results = []
+	for item in work:
+		current = {}
+		current['type'] = 'media'
+		current['title'] = item['title']
+		if 'contributor' in item:
+			current['subtitle'] = item['contributor']
+	return results
+
 class Endpoint(tornado.web.RequestHandler):
     def get(self):
         self.write({ 'test': 1 })
@@ -20,6 +90,7 @@ class DataSource(object):
 
 class MockImageDataSource(DataSource):
 	def make_json(self):
+		return queryTroveImages('tangled')
 		return [{
 			'type': 'image',
 			'title': 'A mock image',
@@ -47,6 +118,7 @@ class MockMediaDataSource(DataSource):
 
 class MockTextDataSource(DataSource):
 	def make_json(self):
+		return queryTroveBooks('tangled')
 		return [{
 			'type': 'text',
 			'title': 'A mock item',
