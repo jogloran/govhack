@@ -161,3 +161,14 @@ table td {
 #graph {
   background-color: #FFF;
 }
+
+/* line 116, ../sass/app.scss */
+.modal {
+  width: 90%;
+  margin-left: -45%;
+}
+
+/* line 121, ../sass/app.scss */
+.modal-body {
+  max-height: 90%;
+}

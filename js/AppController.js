@@ -1,4 +1,7 @@
 app = angular.module('App', ['ui.bootstrap', 'ngSanitize']);
+app.config(function ($dialogProvider) {
+  $dialogProvider.options({backdropFade: true, dialogFade: true});
+});
 
 app.directive('ghAffix', function () {
     return function (scope, element, attrs) {
