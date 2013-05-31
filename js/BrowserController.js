@@ -1,4 +1,33 @@
 function BrowserController($scope, $http, $dialog, $timeout) {
+	function makeItems(items) {
+		return items.map(function(item) {
+			var item= {
+				startDate: item.start + ',01,01',
+				endDate: item.end ? item.end + ',01,01' : null,
+				headline: item.title,
+				text: item.subtitle,
+				asset: {
+					media: item.url,
+				}
+			};
+			console.log(item);
+			return item;
+		});
+	}
+
+	function makeModelFromAddedItems(items) {
+		var model = {
+			timeline: {
+				headline: 'Test',
+				type: 'default',
+				text: 'test',
+				date: makeItems(items)
+			}
+		};
+
+		return model
+	}
+
 	$scope.selectedIndex = 0;
 	$scope.currentItem = null;
 
@@ -12,50 +41,52 @@ function BrowserController($scope, $http, $dialog, $timeout) {
 
 		unbindKeys();
 
-		var model = {
-		"timeline":
-		{
-		"headline":"The Main Timeline Headline Goes here",
-		"type":"default",
-		"text":"<p>Intro body text goes here, some HTML is ok</p>",
-		"date": [
-		                {
-		        "startDate":"2011,12,10",
-		        "endDate":"2011,12,11",
-		        "headline":"Headline Goes Here",
-		        "text":"<p>Body text goes here, some HTML is OK</p>",
-		        "tag":"This is Optional",
-		        "asset": {
-		            "credit":"Credit Name Goes Here",
-		            "caption":"Caption text goes here",
-		            "media": "http://www.smh.com.au"
-		        }
-		                },
-		                                            {
-		        "startDate":"2011,12,10",
-		        "endDate":"2011,12,11",
-		        "headline":"Headline Goes Here",
-		        "text":"<p>Body text goes here, some HTML is OK</p>",
-		        "tag":"This is Optional",
-		        "asset": {
-		            "credit":"Credit Name Goes Here",
-		            "caption":"Caption text goes here",
-		            "media": "http://i2.kym-cdn.com/entries/icons/original/000/011/841/hussie1.jpg"
-		        }
-		    }
-		],
-		"era": [
-		    {
-		        "startDate":"2011,12,10",
-		        "endDate":"2011,12,11",
-		        "headline":"An era",
-		        "text":"<p>Body text goes here, some HTML is OK</p>",
-		        "tag":"This is Optional"
-		    }
+		var model = makeModelFromAddedItems($scope.addedItems);
 
-		]
-		}
-		};
+		// var model = {
+		// "timeline":
+		// {
+		// "headline":"The Main Timeline Headline Goes here",
+		// "type":"default",
+		// "text":"<p>Intro body text goes here, some HTML is ok</p>",
+		// "date": [
+		//                 {
+		//         "startDate":"2011,12,10",
+		//         "endDate":"2011,12,11",
+		//         "headline":"Headline Goes Here",
+		//         "text":"<p>Body text goes here, some HTML is OK</p>",
+		//         "tag":"This is Optional",
+		//         "asset": {
+		//             "credit":"Credit Name Goes Here",
+		//             "caption":"Caption text goes here",
+		//             "media": "http://www.smh.com.au"
+		//         }
+		//                 },
+		// 	{
+		//         "startDate":"2011,12,10",
+		//         "endDate":"2011,12,11",
+		//         "headline":"Headline Goes Here",
+		//         "text":"<p>Body text goes here, some HTML is OK</p>",
+		//         "tag":"This is Optional",
+		//         "asset": {
+		//             "credit":"Credit Name Goes Here",
+		//             "caption":"Caption text goes here",
+		//             "media": "http://i2.kym-cdn.com/entries/icons/original/000/011/841/hussie1.jpg"
+		//         }
+		//     }
+		// ],
+		// "era": [
+		//     {
+		//         "startDate":"2011,12,10",
+		//         "endDate":"2011,12,11",
+		//         "headline":"An era",
+		//         "text":"<p>Body text goes here, some HTML is OK</p>",
+		//         "tag":"This is Optional"
+		//     }
+
+		// ]
+		// }
+		// };
 
 		var timeline_config = {
 		    width:              '100%',
