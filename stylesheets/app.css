@@ -185,5 +185,5 @@ table td {
 
 /* line 133, ../sass/app.scss */
 #item-list-pane {
-  overflow: scroll;
+  overflow-y: scroll;
 }
