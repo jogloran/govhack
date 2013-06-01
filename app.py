@@ -38,9 +38,15 @@ def queryFlickr():
 
         current['title'] = title
         current['timestamp'] = get_year(title)
+	current['start'] = current['timestamp']
+	if current['timestamp'] == None:
+		continue
+		#print 'year is none: ' + title
+	else:
+		print 'year is: ' + current['timestamp']
 	current['type'] = 'image'
         rawSizes = flickr.photos_getSizes(photo_id=p['id'], format='json')
-	print rawSizes
+	#print rawSizes
         with file('out', 'w') as f: print >>f, rawSizes[14:-1]
 	sizes = json.loads(rawSizes[14:-1])
         subSizes = sizes['sizes']
