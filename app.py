@@ -139,6 +139,10 @@ class DataSource(object):
     def make_json(self):
         pass
 
+class FlickrImageDataSource(DataSource):
+   def make_json(self):
+	return queryFlickr
+
 class MockImageDataSource(DataSource):
     def make_json(self):
 	c= queryFlickr()
