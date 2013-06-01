@@ -9,6 +9,8 @@ import tornado.options
 import json
 import urllib2
 
+topic='captain+cook'
+
 def queryTroveUrl(zone, searchTerms):
     results = []
     for i in range(5):
@@ -19,9 +21,10 @@ def queryTroveUrl(zone, searchTerms):
             records = rec['records']
             if 'next' not in records:
                 i = 6
-            work = records['work']
-            for item in work:
-                results.append(item)
+            if 'work' in records:
+            	work = records['work']
+            	for item in work:
+                	results.append(item)
 
     return results
 
@@ -39,9 +42,9 @@ def queryTroveImages(query):
             for id in dict:
                 #these only have 1 url, so we only add them if they actually have a url
                 current['url'] = id['value']
-        if 'linktype' in id:
-            if id['linktype'] == 'thumbnail':
-                results.append(current)
+            if 'linktype' in id:
+                if id['linktype'] == 'thumbnail':
+                    results.append(current)
 
     return results
 
@@ -93,7 +96,7 @@ class DataSource(object):
 
 class MockImageDataSource(DataSource):
     def make_json(self):
-        return queryTroveImages('tangled')
+        return queryTroveImages(topic)
         return [{
             'type': 'image',
             'title': 'A mock image',
@@ -121,7 +124,7 @@ class MockMediaDataSource(DataSource):
 
 class MockTextDataSource(DataSource):
     def make_json(self):
-        return queryTroveBooks('tangled')
+        return queryTroveBooks('topic')
         return [{
             'type': 'text',
             'title': 'A mock item',
