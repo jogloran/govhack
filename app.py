@@ -29,13 +29,14 @@ class DataSource(object):
 
 CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart'] 
 class ABSDataSource(DataSource):
-    def __init__(self):
+    def __init__(self, startyear, endyear):
         from pymongo import MongoClient
         self.c = MongoClient()
+        self.startyear, self.endyear = startyear, endyear
 
     def make_json(self):
-        data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': 1920, '$lt': 2000 } }))
-        print data
+        data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': self.startyear, '$lt': self.endyear } }))
+
         row = data[0]
         result = {
             'title': row['capital'],
@@ -309,7 +310,7 @@ if __name__ == '__main__':
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
-        (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource() ] }),
+        (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource(1900, 2000) ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
         (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),     
