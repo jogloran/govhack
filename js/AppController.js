@@ -71,5 +71,5 @@ function AppController($scope) {
   ];
 	$scope.world = 'Hello!';
 
-	$scope.currentUnit = -1;
+	$scope.currentUnit = 0;
 }
