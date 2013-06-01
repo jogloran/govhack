@@ -55,10 +55,10 @@
 			<div class="pull-right">
 				<div ng-switch='addedItems.indexOf(currentItem) == -1'>
 					<div ng-switch-when='true'>
-						<a class="btn btn-primary" ng-click='addedItems.push(currentItem)'><i class="icon-plus"></i> Add to timeline</a>
+						<a class="btn btn-primary" ng-click='addedItems.push(currentItem)' id='add-to-timeline-button'><i class="icon-plus"></i> Add to timeline</a>
 					</div>
 					<div ng-switch-default>
-						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1)'><i class="icon-minus"></i> Remove from timeline</a>
+						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1)' id='remove-from-timeline-button'><i class="icon-minus"></i> Remove from timeline</a>
 					</div>
 				</div>
 			</div>

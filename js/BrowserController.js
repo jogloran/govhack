@@ -140,11 +140,18 @@ function BrowserController($scope, $http, $dialog, $timeout) {
 				}
 			});
 		});
+		Mousetrap.bind('+', function(e) {
+			$('body').find('#add-to-timeline-button').click();
+		});
+		Mousetrap.bind('-', function(e) {
+			$('body').find('#remove-from-timeline-button').click();
+		})
 	}
 
 	function unbindKeys() {
 		Mousetrap.unbind('left');
 		Mousetrap.unbind('right');
+		Mousetrap.unbind('+');
 	}
 
 	function rand() {
@@ -154,4 +161,6 @@ function BrowserController($scope, $http, $dialog, $timeout) {
 	$scope.transformStyle = function(item) {
 		return { 'transform': 'rotate(' + item.rotation + 'deg)' };
 	};
+
+	rebindKeys();
 }

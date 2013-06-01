@@ -124,7 +124,7 @@ class MockMediaDataSource(DataSource):
 
 class MockTextDataSource(DataSource):
     def make_json(self):
-        return queryTroveBooks('topic')
+        return queryTroveBooks(topic)
         return [{
             'type': 'text',
             'title': 'A mock item',
