@@ -1,6 +1,8 @@
 import os
 import abc
 
+from collections import defaultdict
+
 import tornado
 import tornado.web
 import tornado.ioloop
@@ -25,7 +27,7 @@ class DataSource(object):
     def make_json(self):
         pass
 
-CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] 
+CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart'] 
 class ABSDataSource(DataSource):
     def __init__(self):
         from pymongo import MongoClient
@@ -42,7 +44,20 @@ class ABSDataSource(DataSource):
             'type': 'graph'
         }
 
-        result['datapoints'] = [ { 'year': str(e['year']), e['capital']: e['population'] } for e in data ]
+        data_per_year = defaultdict(dict)
+        for e in data:
+            data_per_year[str(e['year'])][e['capital']] = e['population']
+
+        # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
+        items = []
+        for year, populations in data_per_year.items():
+            item = { 'year': year }
+            for capital, population in populations.items():
+                item[capital] = population
+            items.append(item)
+
+        result['datapoints'] = items
+
         return [result]
 
 def get_year(s):

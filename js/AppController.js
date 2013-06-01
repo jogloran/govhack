@@ -20,22 +20,22 @@ app.directive('ghAffix', function () {
 
 app.directive('ghGraph', function() {
 	return function (scope, element, attrs) {
-		new Morris.Line({
-  // ID of the element in which to draw the chart.
-  element: 'graph',
-  // Chart data records -- each entry in this array corresponds to a point on
-  // the chart.
-  data: scope.currentItem.datapoints,
-  // The name of the data record attribute that contains x-values.
-  xkey: 'year',
-  // A list of names of data record attributes that contain y-values.
-  ykeys: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
-  // Labels for the ykeys -- will be displayed when you hover over the
-  // chart.
-  labels: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
-  hideHover: true,
-  pointSize: 3,
-});
+    new Morris.Line({
+    // ID of the element in which to draw the chart.
+    element: 'graph',
+    // Chart data records -- each entry in this array corresponds to a point on
+    // the chart.
+    data: scope.currentItem.datapoints,
+    // The name of the data record attribute that contains x-values.
+    xkey: 'year',
+    // A list of names of data record attributes that contain y-values.
+    ykeys: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+    // Labels for the ykeys -- will be displayed when you hover over the
+    // chart.
+    labels: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+    hideHover: true,
+    pointSize: 1,
+    });
 	};
 });
 
