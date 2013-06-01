@@ -42,6 +42,9 @@ app.directive('ghLoading', function ($timeout) {
 
 app.directive('ghGraph', function() {
 	return function (scope, element, attrs) {
+    scope.$watch('currentItem', function(value) {
+      console.log('item changed');
+      $('#graph').empty();
     new Morris.Line({
     // ID of the element in which to draw the chart.
     element: 'graph',
@@ -49,14 +52,18 @@ app.directive('ghGraph', function() {
     // the chart.
     data: scope.currentItem.datapoints,
     // The name of the data record attribute that contains x-values.
-    xkey: 'year',
+    //xkey: 'year',
+	xkey: scope.currentItem.xkey,
     // A list of names of data record attributes that contain y-values.
-    ykeys: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+    //ykeys: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+	ykeys: scope.currentItem.ykeys,
     // Labels for the ykeys -- will be displayed when you hover over the
     // chart.
-    labels: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+    //labels: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+	labels: scope.currentItem.labels,
     hideHover: true,
     pointSize: 1,
+    });
     });
 	};
 });
