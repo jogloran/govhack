@@ -24,30 +24,30 @@
 }
 
 /* line 25, ../sass/app.scss */
-.selected td {
+.selected table.cell td {
   background-color: #237179;
 }
 
 /* line 29, ../sass/app.scss */
-table td.single-column {
+table.cell td.single-column {
   width: 100% !important;
 }
 
 /* line 33, ../sass/app.scss */
-table td:nth-child(1) {
+table.cell td:nth-child(1) {
   padding-right: 6px;
   width: 42px;
 }
 
 /* line 38, ../sass/app.scss */
-table td {
+table.cell td {
   background-color: #3cb9c6;
   font-size: 14pt;
   line-height: 1.3;
 }
 
 /* line 45, ../sass/app.scss */
-table td {
+table.cell td {
   padding-bottom: 8px;
   padding: 8px;
 }
@@ -197,4 +197,10 @@ table td {
 /* line 142, ../sass/app.scss */
 table#unit-selector td button {
   width: 32%;
+}
+
+/* line 146, ../sass/app.scss */
+.unit-heading {
+  position: relative;
+  top: 9px;
 }

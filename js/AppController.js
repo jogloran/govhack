@@ -25,25 +25,22 @@ app.directive('ghGraph', function() {
   element: 'graph',
   // Chart data records -- each entry in this array corresponds to a point on
   // the chart.
-  data: [
-    { year: '2008', value: 20 },
-    { year: '2009', value: 10 },
-    { year: '2010', value: 5 },
-    { year: '2011', value: 5 },
-    { year: '2012', value: 20 }
-  ],
+  data: scope.currentItem.datapoints,
   // The name of the data record attribute that contains x-values.
   xkey: 'year',
   // A list of names of data record attributes that contain y-values.
-  ykeys: ['value'],
+  ykeys: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
   // Labels for the ykeys -- will be displayed when you hover over the
   // chart.
-  labels: ['Value']
+  labels: ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane'] ,
+  hideHover: true,
+  pointSize: 3,
 });
 	};
 });
 
-function AppController($scope) {
+function AppController($scope, $rootScope) {
+
   $scope.modules = [{
     name: 'Present and Past',
     stage: [1, 1],
@@ -71,5 +68,5 @@ function AppController($scope) {
   ];
 	$scope.world = 'Hello!';
 
-	$scope.currentUnit = -1;
+	$rootScope.currentUnit = { unit: 0 };
 }

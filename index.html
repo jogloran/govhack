@@ -32,14 +32,15 @@ body {
 
 	<script src='js/AppController.js'></script>
 	<script src='js/BrowserController.js'></script>
+	<script src='js/UnitSelectorController.js'></script>
 
 	<script>
 	</script>
 </head>
 <body ng-controller='AppController' ng-app='App'>
-<div ng-switch='currentUnit'>
+<div ng-switch='currentUnit.unit'>
 	<div ng-switch-when='-1'>
-		<ng-include src="'_unit_selector.html'"></ng-include>
+		<ng-include src="'_unit_selector.html'" ng-controller='UnitSelectorController'></ng-include>
 	</div>
 	<div ng-switch-default>
 		<ng-include src="'_browser.html'" ng-controller='BrowserController'></ng-include>
