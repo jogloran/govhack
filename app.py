@@ -11,6 +11,51 @@ import urllib2
 
 topic='captain+cook'
 
+import flickrapi
+import re
+
+api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
+nswuser = '29454428@N08'
+
+def get_year(s):
+    results = re.findall(r'\d{4}', s)
+    if results: return results[-1]
+    return None
+
+def queryFlickr():
+    flickr = flickrapi.FlickrAPI(api_key)
+    photos = flickr.photos_search(user_id=nswuser, per_page='10', format='json')
+    #print photos
+    fixedPhotos = photos[14:-1]
+    print fixedPhotos
+    parsedPhotos = json.loads(fixedPhotos)
+    dict = parsedPhotos['photos']
+    photoList = dict['photo']
+    results = []
+    for p in photoList:
+        current = {}
+        title = p['title']
+
+        current['title'] = title
+        current['timestamp'] = get_year(title)
+	current['type'] = 'image'
+        rawSizes = flickr.photos_getSizes(photo_id=p['id'], format='json')
+	print rawSizes
+        with file('out', 'w') as f: print >>f, rawSizes[14:-1]
+	sizes = json.loads(rawSizes[14:-1])
+        subSizes = sizes['sizes']
+        subList = subSizes['size']
+        for size in subList:
+                if 'label' in size:
+                        if size['label'] == "Square":
+                                current['thumbnail'] = size['source']
+                        elif size['label'] == 'Original':
+                                current['url'] = size['source']
+        results.append(current)
+
+    print 'results size:' + str(len(results))
+    return results
+
 def queryTroveUrl(zone, searchTerms):
     results = []
     for i in range(5):
@@ -96,7 +141,9 @@ class DataSource(object):
 
 class MockImageDataSource(DataSource):
     def make_json(self):
-        return queryTroveImages(topic)
+	c= queryFlickr()
+        return c
+        #return queryTroveImages(topic)
         return [{
             'type': 'image',
             'title': 'A mock image',
