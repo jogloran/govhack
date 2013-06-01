@@ -226,3 +226,14 @@ table#unit-selector td button {
   text-transform: uppercase;
   font-size: 10pt;
 }
+
+/* line 172, ../sass/app.scss */
+button.btn {
+  transition: 0.2s ease-in all;
+  color: #fff;
+}
+/* line 175, ../sass/app.scss */
+button.btn:hover {
+  transition: 0.2s ease-in all;
+  color: #b9b9b9b;
+}
