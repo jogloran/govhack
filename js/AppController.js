@@ -20,6 +20,9 @@ app.directive('ghAffix', function () {
 
 app.directive('ghGraph', function() {
 	return function (scope, element, attrs) {
+    scope.$watch('currentItem', function(value) {
+      console.log('item changed');
+      $('#graph').empty();
     new Morris.Line({
     // ID of the element in which to draw the chart.
     element: 'graph',
@@ -38,6 +41,7 @@ app.directive('ghGraph', function() {
 	labels: scope.currentItem.labels,
     hideHover: true,
     pointSize: 1,
+    });
     });
 	};
 });
