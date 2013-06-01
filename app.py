@@ -23,6 +23,27 @@ def get_year(s):
     if results: return results[-1]
     return None
 
+def troveNews():
+    work = queryTroveUrl('newspaper', query)
+    results = []
+    for item in work:
+        current = {}
+        current['type'] = 'image'
+        current['title'] = item['title']
+        current['subtitle'] = ''
+        current['timestamp'] = ''
+        if "identifier" in item:
+            dict = item["identifier"]
+            for id in dict:
+                #these only have 1 url, so we only add them if they actually have a url
+                current['url'] = id['value']
+            if 'linktype' in id:
+                if id['linktype'] == 'thumbnail':
+                    results.append(current)
+
+    return results
+
+
 def queryFlickr():
     flickr = flickrapi.FlickrAPI(api_key)
     photos = flickr.photos_search(user_id=nswuser, per_page='10', format='json')
