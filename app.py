@@ -20,6 +20,35 @@ import re
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
+def getDataSources():
+    lat = -33.86712312199998
+    lon = 151.20428619999998
+    suburb = getSuburbFrom(lat, lon) 
+    return [{   'name':'Present and past family life',
+                'pos' :[1,1],
+                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+            },
+            {   'name':'Past in the Present',
+                'pos':[1,2],
+                'data':[MockImageDataSource(), NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),ABSDataSource(1900,2000)]
+            },
+            {   'name':'Community and Remembrance',
+                'pos':[2,1],
+                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+            },
+            {   'name':'First Contact',
+                'pos':[2,2],
+                'data':[MockImageDataSource(), NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'), ,ABSDataSource(1900,2000)]
+            },
+            {   'name':'The Australian Colonies',
+                'pos':[3,1],
+                'data':[MockImageDataSource(), NAAImageSource('Sydney%20colony%20queensland%20%22new%20south%20whales$22%20victoria%20', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+            },
+            {   'name':'Australia as a Nation',
+                'pos':[3,2],
+                'data':[MockImageDataSource(), NAAImageSource('nation%20australia%federation','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+            }]
+
 def getSuburbFrom(lat, lon):
     data = json.load(urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true'))
 #print data
