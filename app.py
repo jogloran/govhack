@@ -8,6 +8,7 @@ import tornado.options
 
 import json
 import urllib2
+import sqlite3
 
 topic='captain+cook'
 
@@ -147,7 +148,40 @@ class DataSource(object):
 
 class FlickrImageDataSource(DataSource):
    def make_json(self):
-	return queryFlickr
+      return queryFlickr()
+
+class NAAImageSource(DataSource):
+    def __init__(self, query):
+        self.query = query
+        self.c = sqlite3.connect(os.path.expanduser('~/fts/fts.sqlite'))
+        def convert_string(s):
+            try:
+                u = s.decode("utf-8")
+            except UnicodeDecodeError:
+                u = s.decode("cp1252")
+            return u
+
+        self.c.text_factory = convert_string
+
+        self.cursor = self.c.cursor()
+
+    def make_json_item_from_row(self, row):
+        return {
+            'type': 'image',
+            'title': row[1],
+            'subtitle': 'Image',
+            'timestamp': row[2],
+            'url': row[4],
+        }
+
+    def make_json(self):
+        c = self.cursor
+        print self.query
+        c.execute('select * from links where title match ?', (self.query,))
+        result = []
+        for row in c.fetchall():
+            result.append(self.make_json_item_from_row(row))
+        return result
 
 class MockImageDataSource(DataSource):
     def make_json(self):
@@ -219,7 +253,7 @@ if __name__ == '__main__':
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
-        (r'/data', Data, { 'data_sources': [ MockTextDataSource(), MockImageDataSource(),  MockGraphDataSource(), MockMediaDataSource() ] }),
+        (r'/data', Data, { 'data_sources': [ NAAImageSource('Epping') ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
         (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),     
