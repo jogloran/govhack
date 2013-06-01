@@ -28,14 +28,16 @@
 <div class='whole-width'>
 	<div class='row-fluid'>
 		<div>
-			<button class='btn btn-large span4' ng-repeat='unit in modules.slice(0, 3)' ng-click='currentUnit.unit = unit'>
+			<button class='btn btn-large span4 unit-button' ng-repeat='unit in modules.slice(0, 3)' ng-click='currentUnit.unit = unit'
+			 style='background-color: {{unit.colour}}'>
 				{{unit.name}}
 			</button>
 		</div>
 	</div>
 	<div class='row-fluid'>
 		<div>
-			<button class='btn btn-large span4' ng-repeat='unit in modules.slice(3, 6)' ng-click='currentUnit.unit = unit'>
+			<button class='btn btn-large span4 unit-button' ng-repeat='unit in modules.slice(3, 6)' ng-click='currentUnit.unit = unit'
+			style='background-color: {{unit.colour}}'>
 				{{unit.name}}
 			</button>
 		</div>

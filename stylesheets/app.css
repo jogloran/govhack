@@ -204,3 +204,9 @@ table#unit-selector td button {
   position: relative;
   top: 9px;
 }
+
+/* line 151, ../sass/app.scss */
+.unit-button {
+  font-weight: bold;
+  color: #f5f5f5;
+}

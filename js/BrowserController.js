@@ -1,4 +1,4 @@
-function BrowserController($scope, $http, $dialog, $timeout) {
+function BrowserController($scope, $http, $dialog, $timeout, $rootScope) {
 	function makeItems(items) {
 		return items.map(function(item) {
 			var item= {
@@ -114,7 +114,9 @@ function BrowserController($scope, $http, $dialog, $timeout) {
 		}
 	});
 
-	$http.get('/data').success(function(data) {
+	$http.get('/data', {
+		params: { module: $rootScope.currentUnit.unit.id }
+	}).success(function(data) {
 		$scope.items = data.items;
 		$scope.currentItem = $scope.items[0];
 
