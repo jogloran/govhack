@@ -20,6 +20,19 @@ import re
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
+def getSuburbFrom(lat, lon):
+    data = json.load(urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true'))
+#print data
+
+    results = data['results']
+    for r in results:
+        if isinstance(r, dict):
+            address = r['address_components']
+            for comp in address:
+                if 'types' in comp:
+                    if 'locality' in comp['types']:
+                        return comp['long_name']
+
 class DataSource(object):
     __metaclass__ = abc.ABCMeta
 
@@ -300,6 +313,15 @@ class App(tornado.web.RequestHandler):
         self.write(file('index.html').read())
         self.finish()
 
+class Suburb(tornado.web.RequestHandler):
+    def get(self):
+        lat, lon = self.get_argument('lat'), self.get_argument('lon')
+        suburb = getSuburbFrom(lat, lon) 
+        d = {}
+        d['suburb'] = suburb
+        self.write(d)
+        self.finish()
+
 class StaticFileHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
         self.set_header("Cache-control", "no-cache")
@@ -309,6 +331,7 @@ if __name__ == '__main__':
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
+        (r'/suburb', Suburb),
         (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource() ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
