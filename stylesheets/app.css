@@ -240,11 +240,32 @@ button.btn:hover {
 
 /* line 181, ../sass/app.scss */
 #loading {
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  -ms-border-radius: 16px;
+  -o-border-radius: 16px;
+  border-radius: 16px;
   position: absolute;
-  top: 300px;
-  left: 300px;
   background-color: rgba(0, 0, 0, 0.8);
   font-size: 32pt;
-  height: 100px;
+  height: 190px;
+  width: 500px;
+  text-align: center;
   font-weight: bold;
+  line-height: normal;
+}
+/* line 197, ../sass/app.scss */
+#loading i.icon-refresh {
+  position: relative;
+  top: 12px;
+}
+/* line 201, ../sass/app.scss */
+#loading div {
+  position: relative;
+  top: 18px;
+}
+/* line 206, ../sass/app.scss */
+#loading small {
+  font-size: 10pt;
+  line-height: normal;
 }

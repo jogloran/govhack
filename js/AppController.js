@@ -18,13 +18,25 @@ app.directive('ghAffix', function () {
     };
 });
 
+var loadingMessageDelay = 1800;
+
 app.directive('ghLoading', function ($timeout) {
     return function (scope, element, attrs) {
+      $(window).resize(function(){
+          $(element).css({
+              position:'absolute',
+              left: ($(window).width() - $(element).outerWidth())/2,
+              top: ($(window).height() - $(element).outerHeight())/2
+          });
+      });
+      $(window).resize();
+
       var fn = function() {
-        scope.loadingMessage = scope.loadingMessages[++scope.currentLoadingMessageIndex % $scope.loadingMessages.length];
-        $timeout(fn, 1000);
+        scope.loadingMessage = scope.loadingMessages[++scope.currentLoadingMessageIndex % scope.loadingMessages.length];
+        scope.loadingLanguage = scope.loadingLanguages[scope.currentLoadingMessageIndex % scope.loadingMessages.length];
+        $timeout(fn, loadingMessageDelay);
       };
-      $timeout(fn, 1000);
+      $timeout(fn, loadingMessageDelay);
     };
 });
 
@@ -90,9 +102,12 @@ function AppController($scope, $rootScope) {
   ];
 	$scope.world = 'Hello!';
 
+  $rootScope.appState = { isLoading: false };
 	$rootScope.currentUnit = { unit: -1 };
 
-  $scope.loadingMessages = ['Loading...', 'Attendere...', 'Περιμένετε', '请稍等', 'Vui Lòng Đợi', 'Bitte warten...', 'Espere...'];
+  $scope.loadingMessages = ['Loading...', 'Attendere...', 'Περιμένετε', '请稍等...', 'Vui lòng đợi...', 'Bitte warten...', 'Espere...'];
+  $scope.loadingLanguages = ['English', 'Italian', 'Greek', 'Chinese', 'Vietnamese', 'German', 'Spanish'];
   $scope.currentLoadingMessageIndex = 0;
   $scope.loadingMessage = $scope.loadingMessages[$scope.currentLoadingMessageIndex];
+  $scope.loadingLanguage = $scope.loadingLanguages[$scope.currentLoadingMessageIndex];
 }

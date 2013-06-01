@@ -179,14 +179,32 @@ button.btn {
 }
 
 #loading {
+	@include border-radius(16px);
 	position: absolute;
-	top: 300px;
-	left: 300px;
 
 	background-color: rgba(0, 0, 0, 0.8);
 
 	font-size: 32pt;
-	height: 100px;
+	height: 190px;
+	width: 500px;
+
+	text-align: center;
 
 	font-weight: bold;
+
+	line-height: normal;
+
+	i.icon-refresh {
+		position: relative;
+		top: 12px;
+	}
+	div {
+		position: relative;
+		top: 18px;
+	}
+
+	small {
+		font-size: 10pt;
+		line-height: normal;
+	}
 }

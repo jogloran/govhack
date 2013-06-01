@@ -30,6 +30,8 @@ body {
 	</style>
 	<link rel="stylesheet" href="stylesheets/app.css"/>
 
+	<script src='js/spin.js'></script>
+
 	<script src='js/AppController.js'></script>
 	<script src='js/BrowserController.js'></script>
 	<script src='js/UnitSelectorController.js'></script>
@@ -38,7 +40,9 @@ body {
 	</script>
 </head>
 <body ng-controller='AppController' ng-app='App'>
+<div ng-show='appState.isLoading'>
 	<ng-include src="'_loading.html'"></ng-include>
+</div>
 <div ng-switch='currentUnit.unit'>
 	<div ng-switch-when='-1'>
 		<ng-include src="'_unit_selector.html'" ng-controller='UnitSelectorController'></ng-include>
