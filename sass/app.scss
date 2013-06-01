@@ -151,4 +151,20 @@ table#unit-selector td button {
 .unit-button {
 	font-weight: bold;
 	color: #f5f5f5;
+
+	width: 32%;
+	height: 480px;
+}
+
+.unit-button-image {
+	padding-top: 12px;
+	padding-bottom: 12px;
+
+	width: auto;
+	height: 340px;
+}
+
+.stage-label {
+	text-transform: uppercase;
+	font-size: 10pt;
 }
