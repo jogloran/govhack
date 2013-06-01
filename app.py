@@ -186,9 +186,9 @@ class FlickrImageDataSource(DataSource):
       return queryFlickr()
 
 class NAAImageSource(DataSource):
-    def __init__(self, query):
+    def __init__(self, query, path):
         self.query = query
-        self.c = sqlite3.connect(os.path.expanduser('~/fts/fts.sqlite'))
+        self.c = sqlite3.connect(os.path.expanduser(path))
         def convert_string(s):
             try:
                 u = s.decode("utf-8")
@@ -205,7 +205,7 @@ class NAAImageSource(DataSource):
             'type': 'image',
             'title': row[1],
             'subtitle': 'Image',
-            'timestamp': row[2],
+            'start': row[2],
             'url': row[4],
         }
 
@@ -288,7 +288,7 @@ if __name__ == '__main__':
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
-        (r'/data', Data, { 'data_sources': [ ABSDataSource() ] }),
+        (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource() ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
         (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),     
