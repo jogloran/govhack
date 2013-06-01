@@ -133,3 +133,12 @@ $modal-width: 90%;
 #item-list-pane {
 	overflow-y: scroll;
 }
+
+#unit-selector {
+	width: 100%;
+	margin: 0 auto;
+}
+
+table#unit-selector td button {
+	width: 32%;
+}

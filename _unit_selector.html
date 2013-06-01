@@ -1,1 +1,53 @@
-{{$parent.$parent.currentUnit}}<button class="btn" ng-click='$parent.$parent.currentUnit = 0'>Button</button>
+<div class="navbar">
+	<div class="navbar-inner">
+		<div class="container">
+			<div class="pull-right navbar-search">
+				<div class="input-prepend">
+				  <span class="add-on">Find</span>
+				  <input type="text" ng-model='filterQuery' placeholder="type something here to find it"/>
+				</div>
+			</div>
+			<div class="pull-right other-icons">
+				<button class="btn btn-large btn-success" type='button' ng-click='displayDialog()'><i class="icon-book"></i></button>
+				<div modal='timelineShown' close='close()'>
+					<div class="modal-body">
+						<div id="timeline-embed"></div>
+					</div>
+					<div class="modal-footer">
+			            <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+			        </div>
+				</div>
+			</div>
+			<a href="#" class="brand">Our History<img id='masthead-aus-image' src="images/aus.png" alt="Australia"></a>			
+		</div>
+
+	</div>
+</div>
+
+<!-- {{$parent.$parent.currentUnit}}<button class="btn" ng-click='$parent.$parent.currentUnit = 0'>Button</button> -->
+<div class='whole-width'>
+<table id='unit-selector'>
+	<tbody>
+		<tr>
+			<td ng-repeat='unit in units | filter:firstUnit'>
+				<button class='btn btn-large'>
+					{{unit.name}}
+				</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button class='btn btn-large'>
+					Test
+				</button>
+				<button class='btn btn-large'>
+					Test
+				</button>
+				<button class='btn btn-large'>
+					Test
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>

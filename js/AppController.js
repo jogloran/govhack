@@ -44,7 +44,32 @@ app.directive('ghGraph', function() {
 });
 
 function AppController($scope) {
+  $scope.modules = [{
+    name: 'Present and Past',
+    stage: [1, 1],
+  },
+  {
+    name: 'Past in the Present',
+    stage: [1, 2],
+  },
+  {
+    name: 'Community and Remembrance',
+    stage: [2, 1],
+  },
+  {
+    name: 'First Contact',
+    stage: [2, 2],
+  },
+  {
+    name: 'The Australian Colonies',
+    stage: [3, 1],
+  },
+  {
+    name: 'Australia as a Nation',
+    stage: [3, 2],
+  }
+  ];
 	$scope.world = 'Hello!';
 
-	$scope.currentUnit = 0;
+	$scope.currentUnit = -1;
 }

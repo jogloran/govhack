@@ -187,3 +187,14 @@ table td {
 #item-list-pane {
   overflow-y: scroll;
 }
+
+/* line 137, ../sass/app.scss */
+#unit-selector {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* line 142, ../sass/app.scss */
+table#unit-selector td button {
+  width: 32%;
+}
