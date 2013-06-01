@@ -27,40 +27,6 @@ class DataSource(object):
     def make_json(self):
         pass
 
-CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart'] 
-class ABSDataSource(DataSource):
-    def __init__(self, startyear, endyear):
-        from pymongo import MongoClient
-        self.c = MongoClient()
-        self.startyear, self.endyear = startyear, endyear
-
-    def make_json(self):
-        data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': self.startyear, '$lt': self.endyear } }))
-
-        row = data[0]
-        result = {
-            'title': row['capital'],
-            'subtitle': row['year'],
-            'timestamp': row['year'],
-            'type': 'graph'
-        }
-
-        data_per_year = defaultdict(dict)
-        for e in data:
-            data_per_year[str(e['year'])][e['capital']] = e['population']
-
-        # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
-        items = []
-        for year, populations in data_per_year.items():
-            item = { 'year': year }
-            for capital, population in populations.items():
-                item[capital] = population
-            items.append(item)
-
-        result['datapoints'] = items
-
-        return [result]
-
 def get_year(s):
     results = re.findall(r'\d{4}', s)
     if results: return results[-1]
@@ -165,7 +131,7 @@ def queryTroveImages(query):
     return results
 
 def queryTroveBooks(query):
-    work = queryTroveUrl('book', query) 
+    work = queryTroveUrl('book', query)
     results = []
     for item in work:
         current = {}
@@ -305,15 +271,96 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
         self.set_header("Cache-control", "no-cache")
 
+CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart']
+STATES = ['ACT', 'Australia', 'NSW', 'NT', 'Qld', 'SA', 'Tas.', 'Vic.', 'WA']
+
+class ABSDataSource(DataSource):
+
+    def __init__(self, params, startyear, endyear):
+        from pymongo import MongoClient
+        self.c = MongoClient()
+        self.col = self.c.test[params['colname']]
+        self.startyear, self.endyear = startyear, endyear
+        self.params = params
+        self.filter = { 'year': { '$gt': self.startyear, '$lt': self.endyear } }
+        self.filter.update(self.params.get('filter', {}))
+
+    def make_json(self):
+        #data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': self.startyear, '$lt': self.endyear } }))
+        #data = list(self.col.find({'capital': { '$in': CAPITALS }, }))
+        data = list(self.col.find(self.filter))
+
+        row = data[0]
+        result = {
+            'title': self.params.get('title', self.params['colname']),  # row['capital'],
+            'subtitle': self.params.get('subtitle', unicode(self.startyear) + ' - ' + unicode(self.endyear)),
+            'timestamp': unicode(self.startyear) + ' - ' + unicode(self.endyear), # row['year'],
+            'type': 'graph'
+        }
+
+        data_per_year = defaultdict(dict)
+        x_item = self.params['x-item']
+        y_item = self.params['y-item']
+        year_field = self.params.get('year_field', 'year')
+
+        for e in data:
+            #data_per_year[str(e['year'])][e['capital']] = e['population']
+            data_per_year[str(e[year_field])][e[x_item]] = e[y_item]
+
+        # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
+        #items = []
+        #for year, populations in data_per_year.items():
+            #item = { 'year': year }
+            #for capital, population in populations.items():
+                #item[capital] = population
+            #items.append(item)
+
+        items = []
+        for year, ys in data_per_year.items():
+            item = { 'year': year }
+            for x, y in ys.items():
+                #x = x.replace('.', '')
+                item[x] = y
+            items.append(item)
+
+        result['datapoints'] = items
+        result['xkey'] = self.params.get('xkey', 'year')
+        result['ykeys'] = self.params.get('ykeys', [])
+        result['labels'] = self.params.get('labels', result['ykeys'])
+        return [result]
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
-        (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource(1900, 2000) ] }),
+        #(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource(1900, 2000) ] }),
+                                                                                                   (r'/data', Data, { 'data_sources': [
+                                                                                                       ABSDataSource({
+                                                                                                           'colname' : 'pop_capital',
+                                                                                                           'title' : 'Population in Australian Capitals',
+                                                                                                           'filter' : { 'capital' : { '$in': CAPITALS }},
+                                                                                                           'x-item' : 'capital',
+                                                                                                           'y-item' : 'population',
+                                                                                                           'ykeys' : CAPITALS, # ykey for AppController.js
+                                                                                                           #'subtitle' : 'Population in Australian Capitals'
+                                                                                                       },1900, 2010),
+
+                                                                                                       ABSDataSource({
+                                                                                                           'colname' : 'sex_ratio',
+                                                                                                           'title' : 'Ratio of Males-to-Females by State',
+                                                                                                           #'subtitle' : 'Population in Australian Capitals'
+                                                                                                           'filter' : { 'state' : { '$in': STATES }},
+                                                                                                           'x-item' : 'state',
+                                                                                                           'y-item' : 'mf_ratio',
+                                                                                                           'ykeys' : STATES, # ykey for AppController.js
+                                                                                                       },1796, 2004),
+
+                                                                                                       MockImageDataSource(),
+                                                                                                   ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
-        (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),     
+        (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),
     ], debug=True)
 
     app.listen(8008)
