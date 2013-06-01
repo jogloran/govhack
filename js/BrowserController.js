@@ -125,6 +125,8 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope) {
 		});
 
 		console.log($scope.items);
+
+		$rootScope.appState.isLoading = false;
 	});
 
 	function rebindKeys() {
