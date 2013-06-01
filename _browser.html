@@ -8,6 +8,7 @@
 				</div>
 			</div>
 			<div class="pull-right other-icons">
+				<button href='#' class='btn' ng-click='currentUnit.unit = -1'>See all modules</button>
 				<button class="btn btn-large btn-success" type='button' ng-click='displayDialog()'><i class="icon-book"></i></button>
 				<div modal='timelineShown' close='close()'>
 					<div class="modal-body">
@@ -18,7 +19,10 @@
 			        </div>
 				</div>
 			</div>
-			<a href="#" class="brand">Our History<img id='masthead-aus-image' src="images/aus.png" alt="Australia"></a>			
+			<a href="#" class="brand">Our History<img id='masthead-aus-image' src="images/aus.png" alt="Australia"></a>
+			<h4 class='unit-heading'>
+				{{currentUnit.unit.name}}
+			</h4>
 		</div>
 
 	</div>

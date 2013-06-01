@@ -1,6 +1,8 @@
 import os
 import abc
 
+from collections import defaultdict
+
 import tornado
 import tornado.web
 import tornado.ioloop
@@ -17,6 +19,46 @@ import re
 
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
+
+class DataSource(object):
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
+    def make_json(self):
+        pass
+
+CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart'] 
+class ABSDataSource(DataSource):
+    def __init__(self):
+        from pymongo import MongoClient
+        self.c = MongoClient()
+
+    def make_json(self):
+        data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': 1920, '$lt': 2000 } }))
+        print data
+        row = data[0]
+        result = {
+            'title': row['capital'],
+            'subtitle': row['year'],
+            'timestamp': row['year'],
+            'type': 'graph'
+        }
+
+        data_per_year = defaultdict(dict)
+        for e in data:
+            data_per_year[str(e['year'])][e['capital']] = e['population']
+
+        # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
+        items = []
+        for year, populations in data_per_year.items():
+            item = { 'year': year }
+            for capital, population in populations.items():
+                item[capital] = population
+            items.append(item)
+
+        result['datapoints'] = items
+
+        return [result]
 
 def get_year(s):
     results = re.findall(r'\d{4}', s)
@@ -160,13 +202,6 @@ class Endpoint(tornado.web.RequestHandler):
         self.write({ 'test': 1 })
         self.finish()
 
-class DataSource(object):
-    __metaclass__ = abc.ABCMeta
-
-    @abc.abstractmethod
-    def make_json(self):
-        pass
-
 class FlickrImageDataSource(DataSource):
    def make_json(self):
       return queryFlickr()
@@ -274,7 +309,7 @@ if __name__ == '__main__':
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
-        (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite')] }),
+        (r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource() ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
         (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),     
