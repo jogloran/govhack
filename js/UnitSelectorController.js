@@ -7,7 +7,7 @@ function UnitSelectorController($scope, $rootScope) {
 	}
 
 	$scope.firstRowOfUnits = function() {
-
+		return [$scope.units]
 	};
 	$scope.secondRowOfUnits = function() {
 

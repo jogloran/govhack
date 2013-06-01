@@ -18,6 +18,16 @@ app.directive('ghAffix', function () {
     };
 });
 
+app.directive('ghLoading', function ($timeout) {
+    return function (scope, element, attrs) {
+      var fn = function() {
+        scope.loadingMessage = scope.loadingMessages[++scope.currentLoadingMessageIndex % $scope.loadingMessages.length];
+        $timeout(fn, 1000);
+      };
+      $timeout(fn, 1000);
+    };
+});
+
 app.directive('ghGraph', function() {
 	return function (scope, element, attrs) {
     new Morris.Line({
@@ -81,4 +91,8 @@ function AppController($scope, $rootScope) {
 	$scope.world = 'Hello!';
 
 	$rootScope.currentUnit = { unit: -1 };
+
+  $scope.loadingMessages = ['Loading...', 'Attendere...', 'Περιμένετε', '请稍等', 'Vui Lòng Đợi', 'Bitte warten...', 'Espere...'];
+  $scope.currentLoadingMessageIndex = 0;
+  $scope.loadingMessage = $scope.loadingMessages[$scope.currentLoadingMessageIndex];
 }

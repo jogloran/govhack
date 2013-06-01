@@ -38,6 +38,7 @@ body {
 	</script>
 </head>
 <body ng-controller='AppController' ng-app='App'>
+	<ng-include src="'_loading.html'"></ng-include>
 <div ng-switch='currentUnit.unit'>
 	<div ng-switch-when='-1'>
 		<ng-include src="'_unit_selector.html'" ng-controller='UnitSelectorController'></ng-include>
