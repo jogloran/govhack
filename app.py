@@ -175,21 +175,7 @@ class MockMediaDataSource(DataSource):
 
 class MockTextDataSource(DataSource):
     def make_json(self):
-        return queryTroveBooks('topic')
-        return [{
-            'type': 'text',
-            'title': 'A mock item',
-            'subtitle': 'Subtitle',
-            'html': '<strong>test</strong>',
-            'timestamp': '2013-05-28T13:29Z',
-        },
-        {
-            'type': 'text',
-            'title': 'Another mock text item',
-            'subtitle': 'Subtitle',
-            'html': '<u>another</u>',
-            'timestamp': '2013-05-28T13:29Z',
-        }]
+        return queryTroveBooks(topic)
 
 class MockGraphDataSource(DataSource):
     def make_json(self):

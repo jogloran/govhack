@@ -26,6 +26,10 @@ $selected-color: darken($bg-color, 20%);
 	background-color: $selected-color;
 }
 
+table td.single-column {
+	width: 100% !important;
+}
+
 table td:nth-child(1) {
 	padding-right: 6px;
 	width: 42px;
@@ -120,4 +124,12 @@ $modal-width: 90%;
 
 .modal-body {
 	max-height: 90%;
+}
+
+.text-item {
+	padding: 8px;
+}
+
+#item-list-pane {
+	overflow-y: scroll;
 }
