@@ -126,14 +126,14 @@ function BrowserController($scope, $http, $dialog, $timeout) {
 	});
 
 	function rebindKeys() {
-		Mousetrap.bind('left', function(e) {
+		Mousetrap.bind(['left', 'up'], function(e) {
 			$scope.$apply(function(scope) {
 				if (scope.selectedIndex > 0) {
 					scope.selectedIndex--;
 				}
 			});
 		});
-		Mousetrap.bind('right', function(e) {
+		Mousetrap.bind(['right', 'down'], function(e) {
 			$scope.$apply(function(scope) {
 				if (scope.selectedIndex < scope.items.length - 1) {
 					scope.selectedIndex++;
@@ -149,9 +149,9 @@ function BrowserController($scope, $http, $dialog, $timeout) {
 	}
 
 	function unbindKeys() {
-		Mousetrap.unbind('left');
-		Mousetrap.unbind('right');
-		Mousetrap.unbind('+');
+		['left', 'right', 'up', 'down', '+', '-'].forEach(function(e) {
+			Mousetrap.unbind(e);
+		});
 	}
 
 	function rand() {
