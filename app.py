@@ -97,20 +97,6 @@ class DataSource(object):
 class MockImageDataSource(DataSource):
     def make_json(self):
         return queryTroveImages(topic)
-        return [{
-            'type': 'image',
-            'title': 'A mock image',
-            'subtitle': 'Subtitle',
-            'url': 'http://farm8.staticflickr.com/7284/8736071763_e4a5f89764_o.jpg',
-            'timestamp': '2013-05-28T13:29Z',
-        },
-        {
-            'type': 'image',
-            'title': 'A mock image',
-            'subtitle': 'Subtitle',
-            'url': 'http://farm6.staticflickr.com/5341/8778803810_a743321a0f_o.jpg',
-            'timestamp': '2013-05-28T13:29Z',
-        }]
 
 class MockMediaDataSource(DataSource):
     def make_json(self):
@@ -125,20 +111,6 @@ class MockMediaDataSource(DataSource):
 class MockTextDataSource(DataSource):
     def make_json(self):
         return queryTroveBooks(topic)
-        return [{
-            'type': 'text',
-            'title': 'A mock item',
-            'subtitle': 'Subtitle',
-            'html': '<strong>test</strong>',
-            'timestamp': '2013-05-28T13:29Z',
-        },
-        {
-            'type': 'text',
-            'title': 'Another mock text item',
-            'subtitle': 'Subtitle',
-            'html': '<u>another</u>',
-            'timestamp': '2013-05-28T13:29Z',
-        }]
 
 class MockGraphDataSource(DataSource):
     def make_json(self):

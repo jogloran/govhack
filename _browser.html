@@ -26,7 +26,7 @@
 
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span3 well">
+		<div class="span3 well" id='item-list-pane' gh-vertical-fluid>
 			<div class='nav nav-list' id="item-list">
 			<div ng-repeat='item in items | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
 				<div ng-class='{ selected: selectedIndex == $index }'>

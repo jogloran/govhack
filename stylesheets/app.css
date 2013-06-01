@@ -182,3 +182,8 @@ table td {
 .text-item {
   padding: 8px;
 }
+
+/* line 133, ../sass/app.scss */
+#item-list-pane {
+  overflow: scroll;
+}

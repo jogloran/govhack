@@ -3,6 +3,15 @@ app.config(function ($dialogProvider) {
   $dialogProvider.options({backdropFade: true, dialogFade: true});
 });
 
+app.directive('ghVerticalFluid', function() {
+	return function (scope, element, attrs) {
+	    $(element).css({'height':($(window).height() - 57 - 40)+'px'});
+	    $(window).resize(function(){
+	        $(element).css({'height':($(window).height() - 57 - 40)+'px'});
+	    });
+	};
+});
+
 app.directive('ghAffix', function () {
     return function (scope, element, attrs) {
         element.affix({ offset: 67 });
