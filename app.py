@@ -100,7 +100,16 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                    'y-item' : 'population',
                    'ykeys' : CAPITALS, # ykey for AppController.js
                    #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+               }, 1900, 2010),
+                ABSDataSource({
+                   'colname' : 'sex_ratio',
+                   'title' : 'Ratio of Males-to-Females by State',
+                   #'subtitle' : 'Population in Australian Capitals'
+                   'filter' : { 'state' : { '$in': STATES }},
+                   'x-item' : 'state',
+                   'y-item' : 'mf_ratio',
+                   'ykeys' : STATES, # ykey for AppController.js
+               }, 1796, 2004)]
             },
         'nation':
             {
