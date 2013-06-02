@@ -30,37 +30,37 @@ def getDataSourceById(id):
         'family': {
                 'name':'Present and past family life',
                 'pos' :[1,1],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite', 1900), NAAImageSource('Collection','sydney1955.sqlite',1900),ABSDataSource(1900,2000)]
             },
         'past':
             {
                 'name':'Past in the Present',
                 'pos':[1,2],
-                'data':[MockImageDataSource(), NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),ABSDataSource(1900,2000)]
+                'data':[MockImageDataSource(), NAAImageSource(suburb, 'sydney1885.sqlite', 1900), NAAImageSource(suburb,'sydney1955.sqlite', 1900),ABSDataSource(1900,2000)]
             },
         'community':
             {
                 'name':'Community and Remembrance',
                 'pos':[2,1],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+                'data':[MockImageDataSource(), NAAImageSource('Christmas OR Easter OR Hanukkah', 'sydney1885.sqlite',1900), NAAImageSource('Christmas OR Easter OR Hanukkah OR "Australia Day" OR ANZAC OR "bastille day" OR "chinese new year" OR diwali OR Ramadan OR "moon festival"','sydney1955.sqlite', 1900),ABSDataSource(1900,2000)]
             },
         'contact':
             {
                 'name':'First Contact',
                 'pos':[2,2],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'),ABSDataSource(1900,2000)]
+                'data':[MockImageDataSource(), NAAImageSource('Sydney OR aboriginal OR contact OR "zheng he" OR "torres" OR "willem janszoon" OR "Abel Tasman" OR "captain cook" OR "la perouse" OR "Vasco de gama" OR "christopher columbus" OR "james stirling"', 'sydney1885.sqlite', 1788),ABSDataSource(1900,2000)]
             },
         'colonies':
             {
                 'name':'The Australian Colonies',
                 'pos':[3,1],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney%20colony%20queensland%20%22new%20south%20whales$22%20victoria%20', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+                'data':[MockImageDataSource(), NAAImageSource('Sydney OR colony OR queensland OR victoria OR "new south wales"', 'sydney1885.sqlite', 1785), NAAImageSource('Collection','sydney1955.sqlite', 1785),ABSDataSource(1900,2000)]
             },
         'nation':
             {
                 'name':'Australia as a Nation',
                 'pos':[3,2],
-                'data':[MockImageDataSource(), NAAImageSource('nation%20australia%federation','sydney1955.sqlite'),ABSDataSource(1900,2000)]
+                'data':[MockImageDataSource(), NAAImageSource('nation OR australia OR federation','sydney1955.sqlite', 1890),ABSDataSource(1900,2000)]
             }
         }
 
@@ -267,9 +267,10 @@ class FlickrImageDataSource(DataSource):
       return queryFlickr()
 
 class NAAImageSource(DataSource):
-    def __init__(self, query, path):
+    def __init__(self, query, path, startYear):
         self.query = query
         self.c = sqlite3.connect(os.path.expanduser(path))
+        self.startYear = startYear
         def convert_string(s):
             try:
                 u = s.decode("utf-8")
@@ -293,7 +294,11 @@ class NAAImageSource(DataSource):
     def make_json(self):
         c = self.cursor
         print self.query
-        c.execute('select * from links where title match ?', (self.query,))
+        print self.startYear
+        q = "select * from links where title match '"+self.query+"' and start_date > '" + str(self.startYear) + "'"
+        print q
+        c.execute(q)
+        #c.execute("select * from links where title match ? and start_date <= ?", (self.query, self.startYear))
         result = []
         for row in c.fetchall():
             result.append(self.make_json_item_from_row(row))
