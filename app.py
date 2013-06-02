@@ -20,6 +20,21 @@ import re
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
+def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=2020, ):
+    flickrList = terms
+    NAAIList = ' OR '.join('"{0}"'.format(w) for w in terms)
+    troveList = terms[0]
+    troveList = troveList.replace(" ", "%20")
+
+    result = []
+    for db in databases:
+        result.append(NAAImageSource(NAAIList, db, startYear, endYear))
+
+    result.append(FlickrImageDataSource(terms))
+    result.append(TroveImageDataSource(troveList))
+
+    return result + otherDataSources
+
 #def createDataSource(terms, databases):
 def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     if not lat: lat = -33.86712312199998
@@ -29,93 +44,71 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     print 'Suburb: %s' % suburb
 
     familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
+    familyQ = ['family' ,'brother' ,'sister' ,'daughter' ,'son', 'mother', 'father', 'child', 'uncle', 'aunt']
     australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war" OR "prime minister" OR war'
-    colony = 'colony OR queensland OR "new south whales" OR victoria OR gold OR convict OR explore OR farm OR digger OR "botany bay" OR ballarat OR eureka OR bendigo OR "norfolk island"'
+    australiaNationL = ['canberra','democracy', 'nation','immigrants','westminster','white australia','trade union','world war', 'sufferage', 'gallipoli','kokoda','menzies','parkes','darwin','boer war','prime minister','war']
+    colony = 'colony OR queensland OR "new south wales" OR victoria OR gold OR convict OR explore OR farm OR digger OR "botany bay" OR ballarat OR eureka OR bendigo OR "norfolk island"'
+    colonyL = ['colony', 'queensland', 'new south wales', 'victoria', 'gold', 'convict', 'explore', 'farm','digger','botany bay','ballarat','eureka','bendigo','norfolk island']
     firstContact = 'aboriginal OR contact OR convict OR explore OR "zheng he" OR torres OR "William Janszoon" OR "Captain Cook" OR "James Stirling" OR "First fleet"'
+    firstContactL = ['aboriginal','contact','convict','explore','zheng he','torres','William Janszoon','Captain Cook','James stirling','First fleet']
     community = 'Anzac OR flag OR easter OR christmas OR "Moon Festival" OR "Australia day"'
+    communityL = ['anzac', 'flag', 'easter', 'christmas','Moon festival', 'Australia Day']
+
+    absds = ABSDataSource({
+                   'colname' : 'pop_capital',
+                   'title' : 'Population in Australian Capitals',
+                   'filter' : { 'capital' : { '$in': CAPITALS }},
+                   'x-item' : 'capital',
+                   'y-item' : 'population',
+                   'ykeys' : CAPITALS, # ykey for AppController.js
+                   #'subtitle' : 'Population in Australian Capitals'
+                   }, 1900, 2010)
+
+    allDSList = ["sydney1885.sqlite", "sydney1955.sqlite", "fts.sqlite"]
+
+    familyData = buildDataSource(familyQ, allDSList, [absds], 1900, 2000)
+    pastInPresent = buildDataSource([suburb], allDSList, [absds], 1700, 2020)
+    communityData = buildDataSource(communityL, allDSList, [absds], 1900, 2000)
+
+    contactData = buildDataSource(firstContactL, allDSList, [absds], 1700, 1850)
+    nation = buildDataSource(australiaNationL, allDSList, [absds], 1880, 2020)
+    colonyds = buildDataSource(colonyL, allDSList, [absds], 1700, 1900)
+
     data_sources = {
         'family': {
                 'name':'Present and past family life',
                 'pos' :[1,1],
-                'data':[FlickrImageDataSource(["family", "brother", "sister"]), NAAImageSource(familyQuery, 'sydney1885.sqlite'), NAAImageSource(familyQuery,'sydney1955.sqlite'),NAAImageSource(familyQuery, "fts.sqlite"),ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+                'data':familyData
             },
         'past':
             {
                 'name':'Past in the Present',
-                'pos':[1,2],
-                'data':[NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),NAAImageSource(suburb, "fts.sqlite"), ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+                'pos' :[1,2],
+                'data':pastInPresent
             },
         'community':
             {
                 'name':'Community and Remembrance',
                 'pos':[2,1],
-                'data':[NAAImageSource(community, 'sydney1885.sqlite'), NAAImageSource(community,'sydney1955.sqlite'), NAAImageSource(community, 'fts.sqlite'),ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+                'data':communityData
             },
         'contact':
             {
                 'name':'First Contact',
                 'pos':[2,2],
-                'data':[NAAImageSource(firstContact, 'sydney1885.sqlite'),NAAImageSource(firstContact, "fts.sqlite"), ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+                'data':contactData
             },
         'colonies':
             {
                 'name':'The Australian Colonies',
                 'pos':[3,1],
-                'data':[NAAImageSource(colony, 'sydney1885.sqlite'), NAAImageSource(colony, 'fts.sqlite', 1800, 1899), ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+                'data':colonyds
             },
         'nation':
             {
                 'name':'Australia as a Nation',
                 'pos':[3,2],
-                'data':[NAAImageSource(australiaAsANation,'sydney1955.sqlite', 1900, 2020),NAAImageSource(australiaAsANation,'fts.sqlite', 1900, 2020), ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+                'data':nation
             }
         }
 
@@ -213,7 +206,9 @@ def queryFlickr(*terms):
 def queryTroveUrl(zone, searchTerms):
     results = []
     for i in range(5):
-        data = json.load(urllib2.urlopen('http://api.trove.nla.gov.au/result?key=5gj3f7pp9b5c0ath&zone='+zone+'&q='+searchTerms+'&encoding=json&s='+str(i*20)))
+        url = 'http://api.trove.nla.gov.au/result?key=5gj3f7pp9b5c0ath&zone='+zone+'&q='+searchTerms+'&encoding=json&s='+str(i*20)
+        print "Trove URL: " + url
+        data = json.load(urllib2.urlopen(url))
         response = data['response']
         z = response['zone']
         for rec in z:
@@ -236,6 +231,7 @@ def queryTroveImages(query):
         current['title'] = item['title']
         current['subtitle'] = ''
         current['timestamp'] = ''
+        current['source'] = 'trove'
         if "identifier" in item:
             dict = item["identifier"]
             for id in dict:
@@ -330,7 +326,7 @@ class NAAImageSource(DataSource):
             result.append(self.make_json_item_from_row(row))
         return result
 
-class MockImageDataSource(DataSource):
+class TroveImageDataSource(DataSource):
     def __init__(self, query):
         self.query = query
 
