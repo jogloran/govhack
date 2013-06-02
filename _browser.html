@@ -7,8 +7,8 @@
 				  <input type="text" ng-model='filterQuery' placeholder="type something here to find it"/>
 				</div>
 			</div>
-			<div class="pull-right other-icons">
-				<button class='btn' ng-click='currentUnit.unit = -1'>See all modules</button>
+			<div class="pull-right other-icons" id='navbar-actions'>
+				<a class='btn' ng-click='currentUnit.unit = -1'>See all modules</a>
 				<button class="btn btn-large btn-success" ng-click='displayDialog()'><i class="icon-book"></i></button>
 				<div modal='timelineShown' close='close()'>
 					<div class="modal-body">
