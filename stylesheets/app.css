@@ -316,3 +316,11 @@ button.btn:hover {
 .navbar .navbar-search {
   margin-top: 0;
 }
+
+/* line 256, ../sass/app.scss */
+#more-results {
+  text-transform: uppercase;
+  font-size: 8pt;
+  font-weight: bold;
+  text-align: center;
+}

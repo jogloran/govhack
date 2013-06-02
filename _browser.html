@@ -34,27 +34,28 @@
 	<div class="row-fluid">
 		<div class="span3 well" id='item-list-pane' gh-vertical-fluid>
 			<div class='nav nav-list' id="item-list">
-			<div ng-repeat='item in items | orderBy:["start","title","url"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
-				<div ng-class='{ selected: selectedIndex == $index }'>
-					<span class='pull-right added-icon added' ng-show='addedItems.indexOf(item) != -1' ng-animate='{ show: "zoom", hide: "unzoom" }'>
-						<i class="icon-plus"></i>
-					</span>
-					<span ng-switch='item.type'>
-						<div ng-switch-when='image'>
-							<ng-include src="'_image_cell.html'" ng-animate='"appear"'></ng-include>
-						</div>
-						<div ng-switch-when='text'>
-							<ng-include src="'_text_cell.html'" ng-animate='"appear"'></ng-include>
-						</div>
-						<div ng-switch-when='graph'>
-							<ng-include src="'_graph_cell.html'" ng-animate='"appear"'></ng-include>
-						</div>
-						<div ng-switch-when='media'>
-							<ng-include src="'_media_cell.html'" ng-animate='"appear"'></ng-include>
-						</div>
-					</span>
+				<div ng-show='items.length > 3' id='more-results' class='muted'><i class='icon-chevron-down'></i> Scroll down for more results <i class='icon-chevron-down'></i></div>
+				<div ng-repeat='item in items | orderBy:["start","title","url"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
+					<div ng-class='{ selected: selectedIndex == $index }'>
+						<span class='pull-right added-icon added' ng-show='addedItems.indexOf(item) != -1' ng-animate='{ show: "zoom", hide: "unzoom" }'>
+							<i class="icon-plus"></i>
+						</span>
+						<span ng-switch='item.type'>
+							<div ng-switch-when='image'>
+								<ng-include src="'_image_cell.html'" ng-animate='"appear"'></ng-include>
+							</div>
+							<div ng-switch-when='text'>
+								<ng-include src="'_text_cell.html'" ng-animate='"appear"'></ng-include>
+							</div>
+							<div ng-switch-when='graph'>
+								<ng-include src="'_graph_cell.html'" ng-animate='"appear"'></ng-include>
+							</div>
+							<div ng-switch-when='media'>
+								<ng-include src="'_media_cell.html'" ng-animate='"appear"'></ng-include>
+							</div>
+						</span>
+					</div>
 				</div>
-			</div>
 			</div>
 		</div>
 		<div class="span9 well">
