@@ -318,7 +318,7 @@ class NAAImageSource(DataSource):
     def make_json(self):
         c = self.cursor
         print self.query
-        c.execute('select * from links where title match ?', (self.query,))
+        c.execute('select * from links where title match ? limit 50', (self.query,))
         result = []
         for row in c.fetchall():
             result.append(self.make_json_item_from_row(row))
