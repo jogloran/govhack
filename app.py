@@ -29,8 +29,8 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     print 'Suburb: %s' % suburb
 
     familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
-    australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war"'
-    colony = 'colony OR queensland OR "new south whales" OR victoria OR "gold rush" OR convict OR explore OR farm OR digger OR "botany bay" OR ballarat OR eureka OR bendigo OR "norfolk island"'
+    australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war" OR "prime minister" OR war'
+    colony = 'colony OR queensland OR "new south whales" OR victoria OR gold OR convict OR explore OR farm OR digger OR "botany bay" OR ballarat OR eureka OR bendigo OR "norfolk island"'
     firstContact = 'aboriginal OR contact OR convict OR explore OR "zheng he" OR torres OR "William Janszoon" OR "Captain Cook" OR "James Stirling" OR "First fleet"'
     community = 'Anzac OR flag OR easter OR christmas OR "Moon Festival" OR "Australia day"'
     data_sources = {
@@ -93,7 +93,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
             {
                 'name':'The Australian Colonies',
                 'pos':[3,1],
-                'data':[NAAImageSource(colony, 'sydney1885.sqlite'), NAAImageSource(colony, 'fts.sqlite'), ABSDataSource({
+                'data':[NAAImageSource(colony, 'sydney1885.sqlite'), NAAImageSource(colony, 'fts.sqlite', 1800, 1899), ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -107,7 +107,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
             {
                 'name':'Australia as a Nation',
                 'pos':[3,2],
-                'data':[NAAImageSource(australiaAsANation,'sydney1955.sqlite'),ABSDataSource({
+                'data':[NAAImageSource(australiaAsANation,'sydney1955.sqlite', 1900, 2020),NAAImageSource(australiaAsANation,'fts.sqlite', 1900, 2020), ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -294,8 +294,10 @@ class FlickrImageDataSource(DataSource):
         return queryFlickr(*self.terms)
 
 class NAAImageSource(DataSource):
-    def __init__(self, query, path):
+    def __init__(self, query, path, startTime=1800, endTime=2000):
         self.query = query
+        self.startTime = startTime
+        self.endTime = endTime
         self.c = sqlite3.connect(os.path.expanduser(path))
         def convert_string(s):
             try:
@@ -320,7 +322,9 @@ class NAAImageSource(DataSource):
     def make_json(self):
         c = self.cursor
         print self.query
-        c.execute('select * from links where title match ? limit 50', (self.query,))
+        q = "select * from links where title match '" + self.query + "' AND start_date >= '" + str(self.startTime) + "' AND start_date <= '" + str(self.endTime) + "' limit 200"
+        print q
+        c.execute(q)
         result = []
         for row in c.fetchall():
             result.append(self.make_json_item_from_row(row))
