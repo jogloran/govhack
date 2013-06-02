@@ -232,6 +232,10 @@ def queryTroveImages(query):
         current['subtitle'] = ''
         current['timestamp'] = ''
         current['source'] = 'trove'
+
+        if 'issued' in item:
+            current['start'] = item['issued']
+
         if "identifier" in item:
             dict = item["identifier"]
             for id in dict:
