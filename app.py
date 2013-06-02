@@ -86,7 +86,17 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                    'y-item' : 'population',
                    'ykeys' : CAPITALS, # ykey for AppController.js
                    #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010)]
+               }, 1900, 2010),
+                ABSDataSource({
+                    'colname' : 'pop_total_indigenous',
+                    'title' : 'Indigenous Population',
+                    #'subtitle' : 'Population in Australian Capitals'
+                    'filter' : { 'state' : { '$in': STATES }},
+                    'x-item' : 'state',
+                    'y-item' : 'population',
+                    'ykeys' : STATES, # ykey for AppController.js
+                },1836, 2001),
+            ]
             },
         'colonies':
             {
@@ -109,7 +119,16 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                    'x-item' : 'state',
                    'y-item' : 'mf_ratio',
                    'ykeys' : STATES, # ykey for AppController.js
-               }, 1796, 2004)]
+               }, 1796, 2004),
+                ABSDataSource({
+                  'colname' : 'pop_growth_pcnt',
+                  'title' : 'Population Growth (%)',
+                   'subtitle' : 'Population in Australian Capitals',
+                  'filter' : { 'state' : { '$in': STATES }},
+                  'x-item' : 'state',
+                  'y-item' : 'percent_change',
+                  'ykeys' : STATES, # ykey for AppController.js
+               },1840, 2004)]
             },
         'nation':
             {
@@ -556,7 +575,6 @@ if __name__ == '__main__':
                                                                                                        #},1840, 2004),
                                                                                                        #},1789, 2004),
                                                                                                        #MockImageDataSource(),
-                                                                                                   ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
         (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),
