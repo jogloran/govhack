@@ -20,6 +20,10 @@ import re
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
+#def createDataSource(terms, databases):
+    
+
+
 def getDataSourceById(id):
     lat = -33.86712312199998
     lon = 151.20428619999998
@@ -28,7 +32,7 @@ def getDataSourceById(id):
 
     familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
     australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war"'
-    colony = 'Sydney OR colony OR queensland OR "new south whales" OR victoria'
+    colony = 'colony OR queensland OR "new south whales" OR victoria OR "gold rush" OR convict OR explore OR farm OR digger OR "botany bay" OR ballarat OR eureka OR bendigo OR "norfolk island"'
     firstContact = 'aboriginal OR contact OR convict OR explore OR "zheng he" OR torres OR "William Janszoon" OR "Captain Cook" OR "James Stirling" OR "First fleet"'
     community = 'Anzac OR flag OR easter OR christmas OR "Moon Festival" OR "Australia day"'
     data_sources = {
