@@ -29,6 +29,8 @@ def getDataSourceById(id):
     familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
     australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war"'
     colony = 'Sydney OR colony OR queensland OR "new south whales" OR victoria'
+    firstContact = 'aboriginal OR contact OR convict OR explore OR "zheng he" OR torres OR "William Janszoon" OR "Captain Cook" OR "James Stirling" OR "First fleet"'
+    community = 'Anzac OR flag OR easter OR christmas OR "Moon Festival" OR "Australia day"'
     data_sources = {
         'family': {
                 'name':'Present and past family life',
@@ -61,7 +63,7 @@ def getDataSourceById(id):
             {
                 'name':'Community and Remembrance',
                 'pos':[2,1],
-                'data':[NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
+                'data':[NAAImageSource(community, 'sydney1885.sqlite'), NAAImageSource(community,'sydney1955.sqlite'), NAAImageSource(community, 'fts.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -75,7 +77,7 @@ def getDataSourceById(id):
             {
                 'name':'First Contact',
                 'pos':[2,2],
-                'data':[NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'),ABSDataSource({
+                'data':[NAAImageSource(firstContact, 'sydney1885.sqlite'),NAAImageSource(firstContact, "fts.sqlite"), ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -89,7 +91,7 @@ def getDataSourceById(id):
             {
                 'name':'The Australian Colonies',
                 'pos':[3,1],
-                'data':[NAAImageSource(colony, 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
+                'data':[NAAImageSource(colony, 'sydney1885.sqlite'), NAAImageSource(colony, 'fts.sqlite'), ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
