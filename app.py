@@ -535,7 +535,7 @@ class ABSDataSource(DataSource):
         #data = list(self.col.find({'capital': { '$in': CAPITALS }, }))
         data = list(self.col.find(self.filter))
 
-        row = data[0]
+        #row = data[0]
         result = {
             'title': self.params.get('title', self.params['colname']),  # row['capital'],
             'subtitle': self.params.get('subtitle', unicode(self.startyear) + ' - ' + unicode(self.endyear)),
