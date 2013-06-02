@@ -117,4 +117,14 @@ function AppController($scope, $rootScope) {
   $scope.currentLoadingMessageIndex = 0;
   $scope.loadingMessage = $scope.loadingMessages[$scope.currentLoadingMessageIndex];
   $scope.loadingLanguage = $scope.loadingLanguages[$scope.currentLoadingMessageIndex];
+
+  function installPosition(position) {
+    $rootScope.appState.coords = position.coords;
+    console.log($rootScope.appState);
+  }
+
+  if (navigator.geolocation) {
+    console.log('getting position');
+    navigator.geolocation.getCurrentPosition(installPosition);
+  }
 }

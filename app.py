@@ -20,11 +20,12 @@ import re
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
-def getDataSourceById(id):
-    lat = -33.86712312199998
-    lon = 151.20428619999998
+def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
+    if not lat: lat = -33.86712312199998
+    if not lon: lon = 151.20428619999998
     lat, lon = map(str, (lat, lon))
     suburb = getSuburbFrom(lat, lon) 
+    print 'Suburb: %s' % suburb
 
     familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
     australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war"'
@@ -372,8 +373,10 @@ class MockGraphDataSource(DataSource):
 class Data(tornado.web.RequestHandler):
     def get(self):
         module_name = self.get_argument('module')
+        lat = self.get_argument('lat', None)
+        lng = self.get_argument('lng', None)
 
-        data_sources = getDataSourceById(module_name)['data']
+        data_sources = getDataSourceById(module_name, lat, lng)['data']
 
         response = { 'items': [] }
         for ds in data_sources:
