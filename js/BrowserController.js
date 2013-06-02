@@ -1,4 +1,4 @@
-function BrowserController($scope, $http, $dialog, $timeout, $rootScope) {
+function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter) {
 	function makeItems(items) {
 		return items.map(function(item) {
 			var item= {
@@ -18,9 +18,12 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope) {
 	function makeModelFromAddedItems(items) {
 		var model = {
 			timeline: {
-				headline: 'Test',
+				headline: 'My timeline',
 				type: 'default',
-				text: 'test',
+				text: '<h3>' + $scope.currentUnit.unit.name + '</h3>',
+				asset: {
+					'media': 'images/' + $scope.currentUnit.unit.id + '.jpg'
+				},
 				date: makeItems(items)
 			}
 		};
@@ -118,6 +121,8 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope) {
 		params: { module: $rootScope.currentUnit.unit.id }
 	}).success(function(data) {
 		$scope.items = data.items;
+		$scope.items=$filter('orderBy')($scope.items,['start', 'title']);
+		$scope.items=$filter('filter')($scope.items,$scope.filterQuery);
 		$scope.currentItem = $scope.items[0];
 
 		$scope.items.forEach(function(item) {

@@ -8,8 +8,8 @@
 				</div>
 			</div>
 			<div class="pull-right other-icons">
-				<a href='#' class='btn' ng-click='currentUnit.unit = -1'>See all modules</a>
-				<a class="btn btn-large btn-success" type='a' ng-click='displayDialog()'><i class="icon-book"></i></a>
+				<button class='btn' ng-click='currentUnit.unit = -1'>See all modules</button>
+				<button class="btn btn-large btn-success" ng-click='displayDialog()'><i class="icon-book"></i></button>
 				<div modal='timelineShown' close='close()'>
 					<div class="modal-body">
 						<div id="timeline-embed"></div>
@@ -32,7 +32,7 @@
 	<div class="row-fluid">
 		<div class="span3 well" id='item-list-pane' gh-vertical-fluid>
 			<div class='nav nav-list' id="item-list">
-			<div ng-repeat='item in items | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
+			<div ng-repeat='item in items | orderBy:["start","title"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
 				<div ng-class='{ selected: selectedIndex == $index }'>
 					<span class='pull-right added-icon added' ng-show='addedItems.indexOf(item) != -1' ng-animate='{ show: "zoom", hide: "unzoom" }'>
 						<i class="icon-plus"></i>
