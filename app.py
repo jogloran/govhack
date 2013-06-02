@@ -47,7 +47,7 @@ def getDataSourceById(id):
             {
                 'name':'Past in the Present',
                 'pos':[1,2],
-                'data':[MockImageDataSource(""), NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),NAAImageSource(suburb, "fts.sqlite"), ABSDataSource({
+                'data':[NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),NAAImageSource(suburb, "fts.sqlite"), ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -61,7 +61,7 @@ def getDataSourceById(id):
             {
                 'name':'Community and Remembrance',
                 'pos':[2,1],
-                'data':[MockImageDataSource(""), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
+                'data':[NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -75,7 +75,7 @@ def getDataSourceById(id):
             {
                 'name':'First Contact',
                 'pos':[2,2],
-                'data':[MockImageDataSource(""), NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'),ABSDataSource({
+                'data':[NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
