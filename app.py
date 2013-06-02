@@ -78,7 +78,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
             {
                 'name':'First Contact',
                 'pos':[2,2],
-                'data':[NAAImageSource(firstContact, 'sydney1885.sqlite'),NAAImageSource(firstContact, "fts.sqlite"), ABSDataSource({
+                'data':[ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -96,6 +96,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                     'y-item' : 'population',
                     'ykeys' : STATES, # ykey for AppController.js
                 },1836, 2001),
+                NAAImageSource(firstContact, 'sydney1885.sqlite'),NAAImageSource(firstContact, "fts.sqlite"), 
             ]
             },
         'colonies':

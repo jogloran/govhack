@@ -13,6 +13,8 @@
 				<div modal='timelineShown' close='close()'>
 					<div class="modal-body">
 						<div id="timeline-embed"></div>
+						<div id='timeline-graph' gh-timeline-graph gh-show='selectedGraph'>
+						</div>
 					</div>
 					<div class="modal-footer">
 			            <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
@@ -59,10 +61,10 @@
 			<div class="pull-right">
 				<div ng-switch='addedItems.indexOf(currentItem) == -1'>
 					<div ng-switch-when='true'>
-						<a class="btn btn-primary" ng-click='addedItems.push(currentItem)' id='add-to-timeline-button'><i class="icon-plus"></i> Add to timeline</a>
+						<a class="btn btn-primary" ng-click='addedItems.push(currentItem); updateSelectedGraph();' id='add-to-timeline-button'><i class="icon-plus"></i> Add to timeline</a>
 					</div>
 					<div ng-switch-default>
-						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1)' id='remove-from-timeline-button'><i class="icon-minus"></i> Remove from timeline</a>
+						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1); updateSelectedGraph();' id='remove-from-timeline-button'><i class="icon-minus"></i> Remove from timeline</a>
 					</div>
 				</div>
 			</div>
