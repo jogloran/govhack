@@ -336,27 +336,57 @@ if __name__ == '__main__':
         (r'/endpoint', Endpoint),
         #(r'/data', Data, { 'data_sources': [ MockImageDataSource(), MockTextDataSource(), NAAImageSource('Sydney','sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'), ABSDataSource(1900, 2000) ] }),
                                                                                                    (r'/data', Data, { 'data_sources': [
-                                                                                                       ABSDataSource({
-                                                                                                           'colname' : 'pop_capital',
-                                                                                                           'title' : 'Population in Australian Capitals',
-                                                                                                           'filter' : { 'capital' : { '$in': CAPITALS }},
-                                                                                                           'x-item' : 'capital',
-                                                                                                           'y-item' : 'population',
-                                                                                                           'ykeys' : CAPITALS, # ykey for AppController.js
-                                                                                                           #'subtitle' : 'Population in Australian Capitals'
-                                                                                                       },1900, 2010),
+                                                                                                       #ABSDataSource({
+                                                                                                           #'colname' : 'pop_capital',
+                                                                                                           #'title' : 'Population in Australian Capitals',
+                                                                                                           #'filter' : { 'capital' : { '$in': CAPITALS }},
+                                                                                                           #'x-item' : 'capital',
+                                                                                                           #'y-item' : 'population',
+                                                                                                           #'ykeys' : CAPITALS, # ykey for AppController.js
+                                                                                                           ##'subtitle' : 'Population in Australian Capitals'
+                                                                                                       #},1900, 2010),
+
+                                                                                                       #ABSDataSource({
+                                                                                                           #'colname' : 'sex_ratio',
+                                                                                                           #'title' : 'Ratio of Males-to-Females by State',
+                                                                                                           ##'subtitle' : 'Population in Australian Capitals'
+                                                                                                           #'filter' : { 'state' : { '$in': STATES }},
+                                                                                                           #'x-item' : 'state',
+                                                                                                           #'y-item' : 'mf_ratio',
+                                                                                                           #'ykeys' : STATES, # ykey for AppController.js
+                                                                                                       #},1796, 2004),
+
+                                                                                                       #ABSDataSource({
+                                                                                                           #'colname' : 'pop_total_indigenous',
+                                                                                                           #'title' : 'Indigenous Population',
+                                                                                                           ##'subtitle' : 'Population in Australian Capitals'
+                                                                                                           #'filter' : { 'state' : { '$in': STATES }},
+                                                                                                           #'x-item' : 'state',
+                                                                                                           #'y-item' : 'population',
+                                                                                                           #'ykeys' : STATES, # ykey for AppController.js
+                                                                                                       #},1836, 2001),
+
+                                                                                                       #ABSDataSource({
+                                                                                                           #'colname' : 'pop_growth',
+                                                                                                           #'title' : 'Population Growth',
+                                                                                                           ##'subtitle' : 'Population in Australian Capitals'
+                                                                                                           #'filter' : { 'state' : { '$in': STATES }},
+                                                                                                           #'x-item' : 'state',
+                                                                                                           #'y-item' : 'change',
+                                                                                                           #'ykeys' : STATES, # ykey for AppController.js
+                                                                                                       #},1789, 2004),
 
                                                                                                        ABSDataSource({
-                                                                                                           'colname' : 'sex_ratio',
-                                                                                                           'title' : 'Ratio of Males-to-Females by State',
+                                                                                                           'colname' : 'pop_growth_pcnt',
+                                                                                                           'title' : 'Population Growth (%)',
                                                                                                            #'subtitle' : 'Population in Australian Capitals'
                                                                                                            'filter' : { 'state' : { '$in': STATES }},
                                                                                                            'x-item' : 'state',
-                                                                                                           'y-item' : 'mf_ratio',
+                                                                                                           'y-item' : 'percent_change',
                                                                                                            'ykeys' : STATES, # ykey for AppController.js
-                                                                                                       },1796, 2004),
-
-                                                                                                       MockImageDataSource(),
+                                                                                                       },1840, 2004),
+                                                                                                       #},1789, 2004),
+                                                                                                       #MockImageDataSource(),
                                                                                                    ] }),
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
