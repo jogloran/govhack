@@ -117,8 +117,15 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter
 		}
 	});
 
+	var lat, lng;
+	if ($rootScope.appState.coords) {
+		lat = $rootScope.appState.coords.latitude;
+		lng = $rootScope.appState.coords.longitude;
+	}
 	$http.get('/data', {
-		params: { module: $rootScope.currentUnit.unit.id }
+		params: { module: $rootScope.currentUnit.unit.id, 
+			lat: lat, 
+			lng: lng }
 	}).success(function(data) {
 		$scope.items = data.items;
 		$scope.items=$filter('orderBy')($scope.items,['start', 'title']);

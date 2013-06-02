@@ -1,6 +1,11 @@
 <div class="span2"></div>
 <div class="span8">
 	<img ng-src='{{currentItem.url}}' class='img-rounded image-body' ng-style='transformStyle(currentItem)'/>	
-	<p class='image-caption'>{{currentItem.title}}</p>
+	<p class='image-caption'>
+		<div class='pull-right'>
+			{{item.start}}
+		</div>
+		{{currentItem.title}}
+	</p>
 </div>
 <div class="span2"></div>
