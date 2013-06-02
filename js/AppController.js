@@ -110,7 +110,8 @@ function AppController($scope, $rootScope) {
 	$scope.world = 'Hello!';
 
   $rootScope.appState = { isLoading: false };
-	$rootScope.currentUnit = { unit: -1 };
+	$rootScope.currentUnit = { unit: -1};
+	//$rootScope.currentUnit = { unit: $scope.modules[0] };
 
   $scope.loadingMessages = ['Loading...', 'Attendere...', 'Περιμένετε', '请稍等...', 'Vui lòng đợi...', 'Bitte warten...', 'Espere...'];
   $scope.loadingLanguages = ['English', 'Italian', 'Greek', 'Chinese', 'Vietnamese', 'German', 'Spanish'];
