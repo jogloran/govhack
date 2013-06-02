@@ -26,11 +26,14 @@ def getDataSourceById(id):
     lat, lon = map(str, (lat, lon))
     suburb = getSuburbFrom(lat, lon) 
 
+    familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
+    australiaAsANation = 'democracy OR nation OR Immigrants OR westminster OR "white australia" OR "trade union" OR "World War" OR sufferage OR Gallipoli OR kokoda OR menzies OR Parkes OR darwin OR "boer war"'
+    colony = 'Sydney OR colony OR queensland OR "new south whales" OR victoria'
     data_sources = {
         'family': {
                 'name':'Present and past family life',
                 'pos' :[1,1],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
+                'data':[FlickrImageDataSource(["family", "brother", "sister"]), NAAImageSource(familyQuery, 'sydney1885.sqlite'), NAAImageSource(familyQuery,'sydney1955.sqlite'),NAAImageSource(familyQuery, "fts.sqlite"),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -44,7 +47,7 @@ def getDataSourceById(id):
             {
                 'name':'Past in the Present',
                 'pos':[1,2],
-                'data':[MockImageDataSource(), NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),ABSDataSource({
+                'data':[MockImageDataSource(""), NAAImageSource(suburb, 'sydney1885.sqlite'), NAAImageSource(suburb,'sydney1955.sqlite'),NAAImageSource(suburb, "fts.sqlite"), ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -58,7 +61,7 @@ def getDataSourceById(id):
             {
                 'name':'Community and Remembrance',
                 'pos':[2,1],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
+                'data':[MockImageDataSource(""), NAAImageSource('Sydney', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -72,7 +75,7 @@ def getDataSourceById(id):
             {
                 'name':'First Contact',
                 'pos':[2,2],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'),ABSDataSource({
+                'data':[MockImageDataSource(""), NAAImageSource('Sydney%20aboriginal%20contact', 'sydney1885.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -86,7 +89,7 @@ def getDataSourceById(id):
             {
                 'name':'The Australian Colonies',
                 'pos':[3,1],
-                'data':[MockImageDataSource(), NAAImageSource('Sydney%20colony%20queensland%20%22new%20south%20whales$22%20victoria%20', 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
+                'data':[NAAImageSource(colony, 'sydney1885.sqlite'), NAAImageSource('Collection','sydney1955.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -100,7 +103,7 @@ def getDataSourceById(id):
             {
                 'name':'Australia as a Nation',
                 'pos':[3,2],
-                'data':[MockImageDataSource(), NAAImageSource('nation%20australia%federation','sydney1955.sqlite'),ABSDataSource({
+                'data':[NAAImageSource(australiaAsANation,'sydney1955.sqlite'),ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -160,9 +163,9 @@ def troveNews():
     return results
 
 
-def queryFlickr():
+def queryFlickr(*terms):
     flickr = flickrapi.FlickrAPI(api_key)
-    photos = flickr.photos_search(user_id=nswuser, per_page='10', format='json')
+    photos = flickr.photos_search(user_id=nswuser, per_page='100', format='json')
     #print photos
     fixedPhotos = photos[14:-1]
     print fixedPhotos
@@ -175,6 +178,9 @@ def queryFlickr():
         title = p['title']
 
         current['title'] = title
+        if not any (term in title for term in terms):
+            continue
+
         current['timestamp'] = get_year(title)
 	current['start'] = current['timestamp']
 	if current['timestamp'] == None:
@@ -277,8 +283,11 @@ class Endpoint(tornado.web.RequestHandler):
         self.finish()
 
 class FlickrImageDataSource(DataSource):
-   def make_json(self):
-      return queryFlickr()
+    def __init__(self, terms):
+        self.terms = terms
+
+    def make_json(self):
+        return queryFlickr(*self.terms)
 
 class NAAImageSource(DataSource):
     def __init__(self, query, path):
@@ -314,10 +323,11 @@ class NAAImageSource(DataSource):
         return result
 
 class MockImageDataSource(DataSource):
+    def __init__(self, query):
+        self.query = query
+
     def make_json(self):
-	c= queryFlickr()
-        return c
-        #return queryTroveImages(topic)
+        return queryTroveImages(self.query)
         return [{
             'type': 'image',
             'title': 'A mock image',
