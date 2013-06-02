@@ -1,4 +1,4 @@
-app = angular.module('App', ['ui.bootstrap', 'ngSanitize']);
+app = angular.module('App', ['ui.bootstrap', 'ngSanitize', 'ngCookies']);
 app.config(function ($dialogProvider) {
   $dialogProvider.options({backdropFade: true, dialogFade: true});
 });
@@ -16,6 +16,13 @@ app.directive('ghAffix', function () {
     return function (scope, element, attrs) {
         element.affix({ offset: 67 });
     };
+});
+
+app.directive('ghNeedsPermission', function() {
+  return function (scope, element, attrs) {
+    console.log('gh needs permission');
+    scope.askPermission();
+  }
 });
 
 var loadingMessageDelay = 1800;
@@ -89,8 +96,7 @@ app.directive('ghTimelineGraph', function() {
 	};
 });
 
-function AppController($scope, $rootScope) {
-
+function AppController($scope, $rootScope, $cookies, $dialog) {
   $scope.modules = [{
     name: 'Present and Past',
     stage: [1, 1],
@@ -138,14 +144,4 @@ function AppController($scope, $rootScope) {
   $scope.currentLoadingMessageIndex = 0;
   $scope.loadingMessage = $scope.loadingMessages[$scope.currentLoadingMessageIndex];
   $scope.loadingLanguage = $scope.loadingLanguages[$scope.currentLoadingMessageIndex];
-
-  function installPosition(position) {
-    $rootScope.appState.coords = position.coords;
-    console.log($rootScope.appState);
-  }
-
-  if (navigator.geolocation) {
-    console.log('getting position');
-    navigator.geolocation.getCurrentPosition(installPosition);
-  }
 }

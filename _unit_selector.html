@@ -18,7 +18,7 @@
 </div>
 
 <!-- {{$parent.$parent.currentUnit}}<button class="btn" ng-click='$parent.$parent.currentUnit = 0'>Button</button> -->
-<div class='whole-width'>
+<div class='whole-width' gh-needs-permission>
 	<div class='row-fluid' style='padding-bottom: 60px'>
 		<div>
 			<button class='btn btn-large span4 unit-button' ng-repeat='unit in [modules[0], modules[2], modules[4]]' ng-click='appState.isLoading=true; currentUnit.unit = unit'
