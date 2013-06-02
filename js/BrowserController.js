@@ -128,7 +128,7 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter
 			lng: lng }
 	}).success(function(data) {
 		$scope.items = data.items;
-		$scope.items=$filter('orderBy')($scope.items,['start', 'title']);
+		$scope.items=$filter('orderBy')($scope.items,['start', 'title', 'url']);
 		$scope.items=$filter('filter')($scope.items,$scope.filterQuery);
 		$scope.currentItem = $scope.items[0];
 
