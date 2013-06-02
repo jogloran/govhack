@@ -1,5 +1,11 @@
 @import "compass/css3";
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+	font-family: 'Open Sans';
+}
+
 $bg-color: #3cb9c6;
 $selected-color: darken($bg-color, 20%);
 .selected {
@@ -231,4 +237,25 @@ button.btn {
 	padding: 2px;
 	text-transform: uppercase;
 	font-size: 8pt;
+}
+#timeline-graph {
+	height: 150px;
+}
+
+.navbar #navbar-actions {
+}
+
+.navbar #navbar-actions .btn {
+	margin-top: 0;
+}
+
+.navbar .navbar-search {
+	margin-top: 0;
+}
+
+#more-results {
+	text-transform:uppercase;
+	font-size: 8pt;
+	font-weight: bold;	
+	text-align: center;
 }

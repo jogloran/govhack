@@ -36,6 +36,28 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter
 
 	$scope.addedItems = [];
 
+	// get a graph from addedItems
+	$scope.selectedGraph = null;
+
+	$scope.updateSelectedGraph = function() {
+		var items = $scope.addedItems;
+		var found = false;
+		for (var i in items) {
+			var item = items[i];
+			if (item.type === 'graph') {
+				$scope.selectedGraph = item;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			$scope.selectedGraph = null;
+		}
+
+		console.log('selected: ' + $scope.selectedGraph);
+	}
+
 	$scope.filterQuery = null;
 
 	$scope.displayDialog = function() {
@@ -46,56 +68,11 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter
 
 		var model = makeModelFromAddedItems($scope.addedItems);
 
-		// var model = {
-		// "timeline":
-		// {
-		// "headline":"The Main Timeline Headline Goes here",
-		// "type":"default",
-		// "text":"<p>Intro body text goes here, some HTML is ok</p>",
-		// "date": [
-		//                 {
-		//         "startDate":"2011,12,10",
-		//         "endDate":"2011,12,11",
-		//         "headline":"Headline Goes Here",
-		//         "text":"<p>Body text goes here, some HTML is OK</p>",
-		//         "tag":"This is Optional",
-		//         "asset": {
-		//             "credit":"Credit Name Goes Here",
-		//             "caption":"Caption text goes here",
-		//             "media": "http://www.smh.com.au"
-		//         }
-		//                 },
-		// 	{
-		//         "startDate":"2011,12,10",
-		//         "endDate":"2011,12,11",
-		//         "headline":"Headline Goes Here",
-		//         "text":"<p>Body text goes here, some HTML is OK</p>",
-		//         "tag":"This is Optional",
-		//         "asset": {
-		//             "credit":"Credit Name Goes Here",
-		//             "caption":"Caption text goes here",
-		//             "media": "http://i2.kym-cdn.com/entries/icons/original/000/011/841/hussie1.jpg"
-		//         }
-		//     }
-		// ],
-		// "era": [
-		//     {
-		//         "startDate":"2011,12,10",
-		//         "endDate":"2011,12,11",
-		//         "headline":"An era",
-		//         "text":"<p>Body text goes here, some HTML is OK</p>",
-		//         "tag":"This is Optional"
-		//     }
-
-		// ]
-		// }
-		// };
-
 		var timeline_config = {
 		    width:              '100%',
-		    height:             '550',
+		    height:             '380',
 		    source:             model,
-		    embed_id:           'timeline-embed',               //OPTIONAL USE A DIFFERENT DIV ID FOR EMBED
+		    embed_id:           'timeline-embed',
 		}
 
 		$timeout(function() {
@@ -128,7 +105,7 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter
 			lng: lng }
 	}).success(function(data) {
 		$scope.items = data.items;
-		$scope.items=$filter('orderBy')($scope.items,['start', 'title']);
+		$scope.items=$filter('orderBy')($scope.items,['start', 'title', 'url']);
 		$scope.items=$filter('filter')($scope.items,$scope.filterQuery);
 		$scope.currentItem = $scope.items[0];
 
