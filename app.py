@@ -32,7 +32,7 @@ def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=
 
     result.append(FlickrImageDataSource(terms))
     result.append(TroveImageDataSource(troveList))
-    result.append(TroveNewsDataSource(troveList))
+    #result.append(TroveNewsDataSource(troveList))
 
     return result + otherDataSources
 
