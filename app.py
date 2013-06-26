@@ -106,16 +106,19 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                     'y-item' : 'number',
                     'ykeys' : ["Europe","Asia"], # ykey for AppController.js
                     'aggregate' : [
+                            #'region' : { '$in' : ["Europe", "Asia"]},
                         {'$match' : {
-                            'region' : { '$in' : ["Europe", "Asia"]},
+                            'super_region' : { '$regex' : re.compile('(europe|asia)', re.IGNORECASE)},
                             'year' : { '$gte' : 1901, '$lte' : 2001} }},
                         {'$group' : {
-                                '_id': { 'region': "$region", 'year': "$year" },
+                                '_id': { 'super_region': "$super_region", 'year': "$year" },
                                 'number': {'$sum' : "$number"} } },
                         {'$project': {
-                            'region' : "$_id.region",
+                            'region' : "$_id.super_region",
                             'year': "$_id.year",
-                            'number' : "$number"}}],
+                            'number' : "$number",
+                            '_id' : 0,
+                        }}],
                 },1901, 2001),
     ]
     #firstContactABS = [ABSDataSource({
@@ -538,13 +541,20 @@ class ABSDataSource(DataSource):
         self.col = self.c.test[params['colname']]
         self.startyear, self.endyear = startyear, endyear
         self.params = params
+        self.aggregate = self.params.get('aggregate',{})
         self.filter = { 'year': { '$gt': self.startyear, '$lt': self.endyear } }
         self.filter.update(self.params.get('filter', {}))
 
     def make_json(self):
         #data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': self.startyear, '$lt': self.endyear } }))
         #data = list(self.col.find({'capital': { '$in': CAPITALS }, }))
-        data = list(self.col.find(self.filter))
+        data = []
+        if (self.aggregate):
+            #data = list(self.col.aggregate(self.aggregate))
+            data = self.col.aggregate(self.aggregate)
+            data = data['result']
+        else:
+            data = list(self.col.find(self.filter))
 
         #row = data[0]
         result = {
@@ -560,7 +570,6 @@ class ABSDataSource(DataSource):
         year_field = self.params.get('year_field', 'year')
 
         for e in data:
-            #data_per_year[str(e['year'])][e['capital']] = e['population']
             data_per_year[str(e[year_field])][e[x_item]] = e[y_item]
 
         # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
