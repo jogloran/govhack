@@ -32,6 +32,7 @@ def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=
 
     result.append(FlickrImageDataSource(terms))
     result.append(TroveImageDataSource(troveList))
+    #result.append(TroveNewsDataSource(troveList))
 
     return result + otherDataSources
 
@@ -40,7 +41,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     if not lat: lat = -33.86712312199998
     if not lon: lon = 151.20428619999998
     lat, lon = map(str, (lat, lon))
-    suburb = getSuburbFrom(lat, lon) 
+    suburb = getSuburbFrom(lat, lon)
     print 'Suburb: %s' % suburb
 
     familyQuery = 'family OR brother OR sister OR daughter OR son OR mother OR father OR child OR uncle OR aunt'
@@ -54,19 +55,12 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     community = 'Anzac OR flag OR easter OR christmas OR "Moon Festival" OR "Australia day"'
     communityL = ['anzac', 'flag', 'easter', 'christmas','Moon festival', 'Australia Day']
 
-    absds = ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-                   }, 1900, 2010)
 
     allDSList = ["sydney1885.sqlite", "sydney1955.sqlite", "fts.sqlite"]
 
-    firstContactABS = [ABSDataSource({
+    all_ABS = [
+
+                ABSDataSource({
                    'colname' : 'pop_capital',
                    'title' : 'Population in Australian Capitals',
                    'filter' : { 'capital' : { '$in': CAPITALS }},
@@ -75,6 +69,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                    'ykeys' : CAPITALS, # ykey for AppController.js
                    #'subtitle' : 'Population in Australian Capitals'
                }, 1900, 2010),
+
                 ABSDataSource({
                     'colname' : 'pop_total_indigenous',
                     'title' : 'Indigenous Population',
@@ -83,17 +78,7 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                     'x-item' : 'state',
                     'y-item' : 'population',
                     'ykeys' : STATES, # ykey for AppController.js
-                },1836, 2001)]
-
-    colonyABS = [ABSDataSource({
-                   'colname' : 'pop_capital',
-                   'title' : 'Population in Australian Capitals',
-                   'filter' : { 'capital' : { '$in': CAPITALS }},
-                   'x-item' : 'capital',
-                   'y-item' : 'population',
-                   'ykeys' : CAPITALS, # ykey for AppController.js
-                   #'subtitle' : 'Population in Australian Capitals'
-               }, 1900, 2010),
+                },1836, 2001),
                 ABSDataSource({
                    'colname' : 'sex_ratio',
                    'title' : 'Ratio of Males-to-Females by State',
@@ -111,15 +96,93 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                   'x-item' : 'state',
                   'y-item' : 'percent_change',
                   'ykeys' : STATES, # ykey for AppController.js
-               },1840, 2004)]
+               },1840, 2004),
+                ABSDataSource({
+                    'colname' : 'country_of_birth',
+                    'title' : 'European vs. Asian Descent',
+                    #'subtitle' : 'Population in Australian Capitals'
+                    #'filter' : { 'state' : { '$in': STATES }},
+                    'x-item' : 'region',
+                    'y-item' : 'number',
+                    'ykeys' : ["Europe","Asia"], # ykey for AppController.js
+                    'aggregate' : [
+                            #'region' : { '$in' : ["Europe", "Asia"]},
+                        {'$match' : {
+                            'super_region' : { '$regex' : re.compile('(europe|asia)', re.IGNORECASE)},
+                            'year' : { '$gte' : 1901, '$lte' : 2001} }},
+                        {'$group' : {
+                                '_id': { 'super_region': "$super_region", 'year': "$year" },
+                                'number': {'$sum' : "$number"} } },
+                        {'$project': {
+                            'region' : "$_id.super_region",
+                            'year': "$_id.year",
+                            'number' : "$number",
+                            '_id' : 0,
+                        }}],
+                },1901, 2001),
+    ]
+    #firstContactABS = [ABSDataSource({
+                   #'colname' : 'pop_capital',
+                   #'title' : 'Population in Australian Capitals',
+                   #'filter' : { 'capital' : { '$in': CAPITALS }},
+                   #'x-item' : 'capital',
+                   #'y-item' : 'population',
+                   #'ykeys' : CAPITALS, # ykey for AppController.js
+                   ##'subtitle' : 'Population in Australian Capitals'
+               #}, 1900, 2010),
+                #ABSDataSource({
+                    #'colname' : 'pop_total_indigenous',
+                    #'title' : 'Indigenous Population',
+                    ##'subtitle' : 'Population in Australian Capitals'
+                    #'filter' : { 'state' : { '$in': STATES }},
+                    #'x-item' : 'state',
+                    #'y-item' : 'population',
+                    #'ykeys' : STATES, # ykey for AppController.js
+                #},1836, 2001)]
 
-    familyData = buildDataSource(familyQ, allDSList, [absds], 1900, 2000)
-    pastInPresent = buildDataSource([suburb], allDSList, [absds], 1700, 2020)
-    communityData = buildDataSource(communityL, allDSList, [absds], 1900, 2000)
+    #colonyABS = [ABSDataSource({
+                   #'colname' : 'pop_capital',
+                   #'title' : 'Population in Australian Capitals',
+                   #'filter' : { 'capital' : { '$in': CAPITALS }},
+                   #'x-item' : 'capital',
+                   #'y-item' : 'population',
+                   #'ykeys' : CAPITALS, # ykey for AppController.js
+                   ##'subtitle' : 'Population in Australian Capitals'
+               #}, 1900, 2010),
+                #ABSDataSource({
+                   #'colname' : 'sex_ratio',
+                   #'title' : 'Ratio of Males-to-Females by State',
+                   ##'subtitle' : 'Population in Australian Capitals'
+                   #'filter' : { 'state' : { '$in': STATES }},
+                   #'x-item' : 'state',
+                   #'y-item' : 'mf_ratio',
+                   #'ykeys' : STATES, # ykey for AppController.js
+               #}, 1796, 2004),
+                #ABSDataSource({
+                  #'colname' : 'pop_growth_pcnt',
+                  #'title' : 'Population Growth (%)',
+                   #'subtitle' : 'Population in Australian Capitals',
+                  #'filter' : { 'state' : { '$in': STATES }},
+                  #'x-item' : 'state',
+                  #'y-item' : 'percent_change',
+                  #'ykeys' : STATES, # ykey for AppController.js
+               #},1840, 2004)]
 
-    contactData = buildDataSource(firstContactL, allDSList, firstContactABS, 1700, 1850)
-    nation = buildDataSource(australiaNationL, allDSList, [absds], 1880, 2020)
-    colonyds = buildDataSource(colonyL, allDSList, colonyABS, 1700, 1900)
+    familyData = buildDataSource(familyQ, allDSList, all_ABS, 1900, 2000)
+    pastInPresent = buildDataSource([suburb], allDSList, all_ABS, 1700, 2020)
+    communityData = buildDataSource(communityL, allDSList, all_ABS, 1900, 2000)
+
+    contactData = buildDataSource(firstContactL, allDSList, all_ABS, 1700, 1850)
+    nation = buildDataSource(australiaNationL, allDSList, all_ABS, 1880, 2020)
+    colonyds = buildDataSource(colonyL, allDSList, all_ABS, 1700, 1900)
+
+    #familyData = buildDataSource(familyQ, allDSList, [absds], 1900, 2000)
+    #pastInPresent = buildDataSource([suburb], allDSList, [absds], 1700, 2020)
+    #communityData = buildDataSource(communityL, allDSList, [absds], 1900, 2000)
+
+    #contactData = buildDataSource(firstContactL, allDSList, firstContactABS, 1700, 1850)
+    #nation = buildDataSource(australiaNationL, allDSList, [absds], 1880, 2020)
+    #colonyds = buildDataSource(colonyL, allDSList, colonyABS, 1700, 1900)
 
     data_sources = {
         'family': {
@@ -186,9 +249,10 @@ def get_year(s):
     if results: return results[-1]
     return None
 
-def troveNews():
+def troveNews(query):
     work = queryTroveUrl('newspaper', query)
     results = []
+    print work
     for item in work:
         current = {}
         current['type'] = 'image'
@@ -377,6 +441,15 @@ class NAAImageSource(DataSource):
             result.append(self.make_json_item_from_row(row))
         return result
 
+class TroveNewspaperDataSource(DataSource):
+    def __init__(self, query):
+        self.query = query
+
+    def make_json(self):
+        t = queryTroveNews(self.query)
+        print t
+        return t
+
 class TroveImageDataSource(DataSource):
     def __init__(self, query):
         self.query = query
@@ -445,7 +518,7 @@ class App(tornado.web.RequestHandler):
 class Suburb(tornado.web.RequestHandler):
     def get(self):
         lat, lon = self.get_argument('lat'), self.get_argument('lon')
-        suburb = getSuburbFrom(lat, lon) 
+        suburb = getSuburbFrom(lat, lon)
         d = {}
         d['suburb'] = suburb
         self.write(d)
@@ -458,7 +531,9 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
 CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart']
 STATES = ['ACT', 'Australia', 'NSW', 'NT', 'Qld', 'SA', 'Tas.', 'Vic.', 'WA']
 
+
 class ABSDataSource(DataSource):
+
 
     def __init__(self, params, startyear, endyear):
         from pymongo import MongoClient
@@ -466,15 +541,22 @@ class ABSDataSource(DataSource):
         self.col = self.c.test[params['colname']]
         self.startyear, self.endyear = startyear, endyear
         self.params = params
+        self.aggregate = self.params.get('aggregate',{})
         self.filter = { 'year': { '$gt': self.startyear, '$lt': self.endyear } }
         self.filter.update(self.params.get('filter', {}))
 
     def make_json(self):
         #data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': self.startyear, '$lt': self.endyear } }))
         #data = list(self.col.find({'capital': { '$in': CAPITALS }, }))
-        data = list(self.col.find(self.filter))
+        data = []
+        if (self.aggregate):
+            #data = list(self.col.aggregate(self.aggregate))
+            data = self.col.aggregate(self.aggregate)
+            data = data['result']
+        else:
+            data = list(self.col.find(self.filter))
 
-        row = data[0]
+        #row = data[0]
         result = {
             'title': self.params.get('title', self.params['colname']),  # row['capital'],
             'subtitle': self.params.get('subtitle', unicode(self.startyear) + ' - ' + unicode(self.endyear)),
@@ -488,7 +570,6 @@ class ABSDataSource(DataSource):
         year_field = self.params.get('year_field', 'year')
 
         for e in data:
-            #data_per_year[str(e['year'])][e['capital']] = e['population']
             data_per_year[str(e[year_field])][e[x_item]] = e[y_item]
 
         # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
@@ -512,14 +593,13 @@ class ABSDataSource(DataSource):
         result['ykeys'] = self.params.get('ykeys', [])
         result['labels'] = self.params.get('labels', result['ykeys'])
         return [result]
-
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application([
         (r'/', App),
         (r'/endpoint', Endpoint),
         (r'/suburb', Suburb),
-        (r'/data', Data), 
+        (r'/data', Data),
 
         # FIXME: uncomment for ABS data sources
         # (r'/data', Data, { 'data_sources': [
