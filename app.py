@@ -32,6 +32,7 @@ def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=
 
     result.append(FlickrImageDataSource(terms))
     result.append(TroveImageDataSource(troveList))
+    result.append(TroveNewsDataSource(troveList))
 
     return result + otherDataSources
 
@@ -245,9 +246,10 @@ def get_year(s):
     if results: return results[-1]
     return None
 
-def troveNews():
+def troveNews(query):
     work = queryTroveUrl('newspaper', query)
     results = []
+    print work
     for item in work:
         current = {}
         current['type'] = 'image'
@@ -435,6 +437,15 @@ class NAAImageSource(DataSource):
         for row in c.fetchall():
             result.append(self.make_json_item_from_row(row))
         return result
+
+class TroveNewspaperDataSource(DataSource):
+    def __init__(self, query):
+        self.query = query
+
+    def make_json(self):
+        t = queryTroveNews(self.query)
+        print t
+        return t
 
 class TroveImageDataSource(DataSource):
     def __init__(self, query):
