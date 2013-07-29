@@ -99,10 +99,23 @@ function BrowserController($scope, $http, $dialog, $timeout, $rootScope, $filter
 		lat = $rootScope.appState.coords.latitude;
 		lng = $rootScope.appState.coords.longitude;
 	}
-	$http.get('/data', {
-		params: { module: $rootScope.currentUnit.unit.id, 
+
+	if ($rootScope.currentUnit.unit.query) {
+		params = {
+			q: $rootScope.currentUnit.unit.query,
+			start: $rootScope.currentUnit.unit.yearRange[0],
+			end: $rootScope.currentUnit.unit.yearRange[1],
+			lat: lat,
+			lng: lng,
+		}
+	} else {
+		params = { module: $rootScope.currentUnit.unit.id, 
 			lat: lat, 
 			lng: lng }
+	}
+
+	$http.get('/data', {
+		params: params
 	}).success(function(data) {
 		$scope.items = data.items;
 		$scope.items=$filter('orderBy')($scope.items,['start', 'title', 'url']);

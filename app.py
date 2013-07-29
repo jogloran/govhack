@@ -17,6 +17,8 @@ topic='captain+cook'
 import flickrapi
 import re
 
+import shlex
+
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
@@ -35,6 +37,21 @@ def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=
     #result.append(TroveNewsDataSource(troveList))
 
     return result + otherDataSources
+
+def getDataSourceByQuery(query, frm, to, lat=-33.86712312199998, lon=151.20428619999998):
+    if not lat: lat = -33.86712312199998
+    if not lon: lon = 151.20428619999998
+    lat, lon = map(str, (lat, lon))
+
+    suburb = getSuburbFrom(lat, lon)
+    print 'Suburb: %s' % suburb
+
+    allDSList = ["sydney1885.sqlite", "sydney1955.sqlite", "fts.sqlite"]
+    query_terms = shlex.split(query)
+
+    data = buildDataSource(query_terms, allDSList, [], int(frm), int(to))
+
+    return data
 
 #def createDataSource(terms, databases):
 def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
@@ -225,17 +242,20 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     return data_sources[id]
 
 def getSuburbFrom(lat, lon):
-    data = json.load(urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true'))
-#print data
+    try:
+        data = json.load(urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true'))
+    #print data
 
-    results = data['results']
-    for r in results:
-        if isinstance(r, dict):
-            address = r['address_components']
-            for comp in address:
-                if 'types' in comp:
-                    if 'locality' in comp['types']:
-                        return comp['long_name']
+        results = data['results']
+        for r in results:
+            if isinstance(r, dict):
+                address = r['address_components']
+                for comp in address:
+                    if 'types' in comp:
+                        if 'locality' in comp['types']:
+                            return comp['long_name']
+    except urllib2.URLError:
+        return ''
 
 class DataSource(object):
     __metaclass__ = abc.ABCMeta
@@ -497,11 +517,26 @@ class MockGraphDataSource(DataSource):
 
 class Data(tornado.web.RequestHandler):
     def get(self):
-        module_name = self.get_argument('module')
+        # GET parameters:
+        # module (preset module)
+        module_name = self.get_argument('module', None)
+
+        # custom topic
+        # q (query terms)
+        query_string = self.get_argument('q', None)
+        # start (start year)
+        start = self.get_argument('start', 1900)
+        # end (end year)
+        end = self.get_argument('end', 2013)
+        start, end = int(start), int(end)
+
         lat = self.get_argument('lat', None)
         lng = self.get_argument('lng', None)
 
-        data_sources = getDataSourceById(module_name, lat, lng)['data']
+        if module_name:
+            data_sources = getDataSourceById(module_name, lat, lng)['data']
+        else:
+            data_sources = getDataSourceByQuery(query_string, start, end, lat, lng)
 
         response = { 'items': [] }
         for ds in data_sources:

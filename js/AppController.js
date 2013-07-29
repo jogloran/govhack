@@ -3,6 +3,55 @@ app.config(function ($dialogProvider) {
   $dialogProvider.options({backdropFade: true, dialogFade: true});
 });
 
+app.directive('ghSlider', function() {
+    return {
+      replace: true,
+      require: '?ngModel',
+      link: function(scope, elem, attrs, ngModel) {
+        function propChangeHandler(prop) {
+          return function(value, oldValue) {
+            // called when max,min expressions change
+            var slider = $(elem).slider('option', prop, value);
+            var modelValue = ngModel.$viewValue;
+
+            // if the model value is now beyond the new value, clamp it back
+            var extremum = slider.slider('option', prop);
+            
+            if (extremum) {
+              if ((prop === 'max' && modelValue > extremum)
+               || (prop === 'min' && modelValue < extremum)) {
+                ngModel.$setViewValue(extremum);
+              }
+            }
+          };
+        }
+        scope.$watch(attrs.max, propChangeHandler('max'));
+        scope.$watch(attrs.min, propChangeHandler('min'));
+
+        ngModel.$render = function() {
+          // called when the model variable changes
+          $(elem).slider('values', 0, ngModel.$viewValue[0]);
+          $(elem).slider('values', 1, ngModel.$viewValue[1]);
+        };
+
+        $(elem).slider({
+          range: true,
+          min: attrs.min,
+          max: attrs.max,
+          values: [attrs.min, attrs.max],
+          slide: function(event, ui) {
+            scope.$apply(function() {
+              var start = ui.values[0];
+              var end = ui.values[1];
+
+              ngModel.$setViewValue([start, end]);
+            });
+          }
+        });
+      },
+    }
+});
+
 app.directive('ghVerticalFluid', function() {
 	return function (scope, element, attrs) {
 	    $(element).css({'height':($(window).height() - 57 - 40)+'px'});
