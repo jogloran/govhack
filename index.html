@@ -51,6 +51,26 @@ body, button {
 .navbar-search input {
 	font-family: 'Oswald';
 }
+
+.unit-selectors button {
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+.unit-selectors button {
+	 box-shadow: 20px 36px 55px rgba(0,0,0,0.4);
+}
+
+.unit-selectors button:hover {
+	-webkit-transform: scale(1.03);
+	-moz-transform: scale(1.03);
+	-ms-transform: scale(1.03);
+	-o-transform: scale(1.03);
+	transform: scale(1.03);
+}
 	</style>
 	<link rel="stylesheet" href="stylesheets/app.css"/>
 
@@ -61,7 +81,7 @@ body, button {
 	<script>
 	</script>
 </head>
-<body ng-controller='AppController' ng-app='App'>
+<body ng-controller='AppController' ng-app='App' ng-style='bodyStyleForUnit(currentUnit.unit)'>
 <div ng-show='appState.isLoading'>
 	<ng-include src="'_loading.html'"></ng-include>
 </div>

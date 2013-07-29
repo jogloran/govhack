@@ -34,7 +34,7 @@ def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=
 
     result.append(FlickrImageDataSource(terms))
     result.append(TroveImageDataSource(troveList))
-    #result.append(TroveNewsDataSource(troveList))
+    result.append(TroveNewspaperDataSource(troveList))
 
     return result + otherDataSources
 
@@ -466,7 +466,7 @@ class TroveNewspaperDataSource(DataSource):
         self.query = query
 
     def make_json(self):
-        t = queryTroveNews(self.query)
+        t = troveNews(self.query)
         print t
         return t
 
