@@ -114,28 +114,37 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                   'y-item' : 'percent_change',
                   'ykeys' : STATES, # ykey for AppController.js
                },1840, 2004),
+                #ABSDataSource({
+                    #'colname' : 'country_of_birth',
+                    #'title' : 'Migration from Europe & Asia',
+                    ##'subtitle' : 'Population in Australian Capitals'
+                    ##'filter' : { 'state' : { '$in': STATES }},
+                    #'x-item' : 'region',
+                    #'y-item' : 'number',
+                    #'ykeys' : ["Europe","Asia"], # ykey for AppController.js
+                    #'aggregate' : [
+                            ##'region' : { '$in' : ["Europe", "Asia"]},
+                        #{'$match' : {
+                            #'super_region' : { '$regex' : re.compile('(europe|asia)', re.IGNORECASE)},
+                            #'year' : { '$gte' : 1901, '$lte' : 2010} }},
+                        #{'$group' : {
+                                #'_id': { 'super_region': "$super_region", 'year': "$year" },
+                                #'number': {'$sum' : "$number"} } },
+                        #{'$project': {
+                            #'region' : "$_id.super_region",
+                            #'year': "$_id.year",
+                            #'number' : "$number",
+                            #'_id' : 0,
+                        #}}],
+                #},1901, 2001),
                 ABSDataSource({
-                    'colname' : 'country_of_birth',
-                    'title' : 'European vs. Asian Descent',
-                    #'subtitle' : 'Population in Australian Capitals'
-                    #'filter' : { 'state' : { '$in': STATES }},
+                    'colname' : 'mig_vol_by_region',
+                    'title' : 'Foreign-born Population',
+                    'subtitle': 'Number of Persons born outside of Australia',
+                    'filter' : { 'region' : { '$in': REGIONS }},
                     'x-item' : 'region',
                     'y-item' : 'number',
-                    'ykeys' : ["Europe","Asia"], # ykey for AppController.js
-                    'aggregate' : [
-                            #'region' : { '$in' : ["Europe", "Asia"]},
-                        {'$match' : {
-                            'super_region' : { '$regex' : re.compile('(europe|asia)', re.IGNORECASE)},
-                            'year' : { '$gte' : 1901, '$lte' : 2001} }},
-                        {'$group' : {
-                                '_id': { 'super_region': "$super_region", 'year': "$year" },
-                                'number': {'$sum' : "$number"} } },
-                        {'$project': {
-                            'region' : "$_id.super_region",
-                            'year': "$_id.year",
-                            'number' : "$number",
-                            '_id' : 0,
-                        }}],
+                    'ykeys' : REGIONS, # ykey for AppController.js
                 },1901, 2001),
     ]
     #firstContactABS = [ABSDataSource({
@@ -185,6 +194,13 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                   #'ykeys' : STATES, # ykey for AppController.js
                #},1840, 2004)]
 
+    #familyData = buildDataSource(allDSList, all_ABS, 1900, 2000)
+    #pastInPresent = buildDataSource(allDSList, all_ABS, 1700, 2020)
+    #communityData = buildDataSource(allDSList, all_ABS, 1900, 2000)
+
+    #contactData = buildDataSource(allDSList, all_ABS, 1700, 1850)
+    #nation = buildDataSource(allDSList, all_ABS, 1880, 2020)
+    #colonyds = buildDataSource(allDSList, all_ABS, 1700, 1900)
     familyData = buildDataSource(familyQ, allDSList, all_ABS, 1900, 2000)
     pastInPresent = buildDataSource([suburb], allDSList, all_ABS, 1700, 2020)
     communityData = buildDataSource(communityL, allDSList, all_ABS, 1900, 2000)
@@ -565,6 +581,7 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
 
 CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart']
 STATES = ['ACT', 'Australia', 'NSW', 'NT', 'Qld', 'SA', 'Tas.', 'Vic.', 'WA']
+REGIONS = ["Oceania", "Europe","Asia", "Africa", "North America", "South America"]
 
 
 class ABSDataSource(DataSource):
@@ -628,6 +645,8 @@ class ABSDataSource(DataSource):
         result['ykeys'] = self.params.get('ykeys', [])
         result['labels'] = self.params.get('labels', result['ykeys'])
         return [result]
+
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application([
