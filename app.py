@@ -98,13 +98,13 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                 },1836, 2001),
                 ABSDataSource({
                    'colname' : 'sex_ratio',
-                   'title' : 'Ratio of Males-to-Females by State',
-                   #'subtitle' : 'Population in Australian Capitals'
+                   'title' : 'Gender Balance in Australia',
+                   'subtitle' : 'Number of Males for every 100 Females',
                    'filter' : { 'state' : { '$in': STATES }},
                    'x-item' : 'state',
                    'y-item' : 'mf_ratio',
                    'ykeys' : STATES, # ykey for AppController.js
-               }, 1796, 2004),
+               }, 1810, 2004),
                 ABSDataSource({
                   'colname' : 'pop_growth_pcnt',
                   'title' : 'Population Growth (%)',
@@ -140,12 +140,12 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                 ABSDataSource({
                     'colname' : 'mig_vol_by_region',
                     'title' : 'Foreign-born Population',
-                    'subtitle': 'Number of Persons born outside of Australia',
+                    'subtitle': 'Number of Residents born outside of Australia',
                     'filter' : { 'region' : { '$in': REGIONS }},
                     'x-item' : 'region',
                     'y-item' : 'number',
                     'ykeys' : REGIONS, # ykey for AppController.js
-                },1901, 2001),
+                },1901, 2004),
     ]
     #firstContactABS = [ABSDataSource({
                    #'colname' : 'pop_capital',
@@ -581,7 +581,7 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
 
 CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart']
 STATES = ['ACT', 'Australia', 'NSW', 'NT', 'Qld', 'SA', 'Tas.', 'Vic.', 'WA']
-REGIONS = ["Oceania", "Europe","Asia", "Africa", "North America", "South America"]
+REGIONS = ["Oceania", "Europe","Asia", "Africa", "America"]
 
 
 class ABSDataSource(DataSource):

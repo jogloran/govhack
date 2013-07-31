@@ -16,11 +16,14 @@ var mapRename = function(){
 		region = 'Asia';
 	}else if(superRegion.match(/africa/i)){
 		region = 'Africa';
-	}else if(superRegion.match(/north.*america/i)){
-		region = 'North America';
-	}else if(superRegion.match(/south.*america/i)){
-		region = 'South America';
+	}else if(superRegion.match(/america/i)){
+		region = 'America';
 	}
+	//}else if(superRegion.match(/north.*america/i)){
+		//region = 'North America';
+	//}else if(superRegion.match(/south.*america/i)){
+		//region = 'South America';
+	//}
 	
 	var key = region + '_' + this.year;
 
