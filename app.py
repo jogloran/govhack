@@ -17,6 +17,8 @@ topic='captain+cook'
 import flickrapi
 import re
 
+import shlex
+
 api_key = '7f7d7d3fbe64bb46e98a4d97a72fd563'
 nswuser = '29454428@N08'
 
@@ -32,8 +34,24 @@ def buildDataSource(terms, databases, otherDataSources, startYear=1800, endYear=
 
     result.append(FlickrImageDataSource(terms))
     result.append(TroveImageDataSource(troveList))
+    result.append(TroveNewspaperDataSource(troveList))
 
     return result + otherDataSources
+
+def getDataSourceByQuery(query, frm, to, lat=-33.86712312199998, lon=151.20428619999998):
+    if not lat: lat = -33.86712312199998
+    if not lon: lon = 151.20428619999998
+    lat, lon = map(str, (lat, lon))
+
+    suburb = getSuburbFrom(lat, lon)
+    print 'Suburb: %s' % suburb
+
+    allDSList = ["sydney1885.sqlite", "sydney1955.sqlite", "fts.sqlite"]
+    query_terms = shlex.split(query)
+
+    data = buildDataSource(query_terms, allDSList, [], int(frm), int(to))
+
+    return data
 
 #def createDataSource(terms, databases):
 def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
@@ -80,13 +98,13 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                 },1836, 2001),
                 ABSDataSource({
                    'colname' : 'sex_ratio',
-                   'title' : 'Ratio of Males-to-Females by State',
-                   #'subtitle' : 'Population in Australian Capitals'
+                   'title' : 'Gender Balance in Australia',
+                   'subtitle' : 'Number of Males for every 100 Females',
                    'filter' : { 'state' : { '$in': STATES }},
                    'x-item' : 'state',
                    'y-item' : 'mf_ratio',
                    'ykeys' : STATES, # ykey for AppController.js
-               }, 1796, 2004),
+               }, 1810, 2004),
                 ABSDataSource({
                   'colname' : 'pop_growth_pcnt',
                   'title' : 'Population Growth (%)',
@@ -96,26 +114,38 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                   'y-item' : 'percent_change',
                   'ykeys' : STATES, # ykey for AppController.js
                },1840, 2004),
+                #ABSDataSource({
+                    #'colname' : 'country_of_birth',
+                    #'title' : 'Migration from Europe & Asia',
+                    ##'subtitle' : 'Population in Australian Capitals'
+                    ##'filter' : { 'state' : { '$in': STATES }},
+                    #'x-item' : 'region',
+                    #'y-item' : 'number',
+                    #'ykeys' : ["Europe","Asia"], # ykey for AppController.js
+                    #'aggregate' : [
+                            ##'region' : { '$in' : ["Europe", "Asia"]},
+                        #{'$match' : {
+                            #'super_region' : { '$regex' : re.compile('(europe|asia)', re.IGNORECASE)},
+                            #'year' : { '$gte' : 1901, '$lte' : 2010} }},
+                        #{'$group' : {
+                                #'_id': { 'super_region': "$super_region", 'year': "$year" },
+                                #'number': {'$sum' : "$number"} } },
+                        #{'$project': {
+                            #'region' : "$_id.super_region",
+                            #'year': "$_id.year",
+                            #'number' : "$number",
+                            #'_id' : 0,
+                        #}}],
+                #},1901, 2001),
                 ABSDataSource({
-                    'colname' : 'country_of_birth',
-                    'title' : 'European vs. Asian Descent',
-                    #'subtitle' : 'Population in Australian Capitals'
-                    #'filter' : { 'state' : { '$in': STATES }},
+                    'colname' : 'mig_vol_by_region',
+                    'title' : 'Foreign-born Population',
+                    'subtitle': 'Number of Residents born outside of Australia',
+                    'filter' : { 'region' : { '$in': REGIONS }},
                     'x-item' : 'region',
                     'y-item' : 'number',
-                    'ykeys' : ["Europe","Asia"], # ykey for AppController.js
-                    'aggregate' : [
-                        {'$match' : {
-                            'region' : { '$in' : ["Europe", "Asia"]},
-                            'year' : { '$gte' : 1901, '$lte' : 2001} }},
-                        {'$group' : {
-                                '_id': { 'region': "$region", 'year': "$year" },
-                                'number': {'$sum' : "$number"} } },
-                        {'$project': {
-                            'region' : "$_id.region",
-                            'year': "$_id.year",
-                            'number' : "$number"}}],
-                },1901, 2001),
+                    'ykeys' : REGIONS, # ykey for AppController.js
+                },1901, 2004),
     ]
     #firstContactABS = [ABSDataSource({
                    #'colname' : 'pop_capital',
@@ -164,6 +194,13 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
                   #'ykeys' : STATES, # ykey for AppController.js
                #},1840, 2004)]
 
+    #familyData = buildDataSource(allDSList, all_ABS, 1900, 2000)
+    #pastInPresent = buildDataSource(allDSList, all_ABS, 1700, 2020)
+    #communityData = buildDataSource(allDSList, all_ABS, 1900, 2000)
+
+    #contactData = buildDataSource(allDSList, all_ABS, 1700, 1850)
+    #nation = buildDataSource(allDSList, all_ABS, 1880, 2020)
+    #colonyds = buildDataSource(allDSList, all_ABS, 1700, 1900)
     familyData = buildDataSource(familyQ, allDSList, all_ABS, 1900, 2000)
     pastInPresent = buildDataSource([suburb], allDSList, all_ABS, 1700, 2020)
     communityData = buildDataSource(communityL, allDSList, all_ABS, 1900, 2000)
@@ -221,17 +258,20 @@ def getDataSourceById(id, lat=-33.86712312199998, lon=151.20428619999998):
     return data_sources[id]
 
 def getSuburbFrom(lat, lon):
-    data = json.load(urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true'))
-#print data
+    try:
+        data = json.load(urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true'))
+    #print data
 
-    results = data['results']
-    for r in results:
-        if isinstance(r, dict):
-            address = r['address_components']
-            for comp in address:
-                if 'types' in comp:
-                    if 'locality' in comp['types']:
-                        return comp['long_name']
+        results = data['results']
+        for r in results:
+            if isinstance(r, dict):
+                address = r['address_components']
+                for comp in address:
+                    if 'types' in comp:
+                        if 'locality' in comp['types']:
+                            return comp['long_name']
+    except urllib2.URLError:
+        return ''
 
 class DataSource(object):
     __metaclass__ = abc.ABCMeta
@@ -245,9 +285,10 @@ def get_year(s):
     if results: return results[-1]
     return None
 
-def troveNews():
+def troveNews(query):
     work = queryTroveUrl('newspaper', query)
     results = []
+    print work
     for item in work:
         current = {}
         current['type'] = 'image'
@@ -436,6 +477,15 @@ class NAAImageSource(DataSource):
             result.append(self.make_json_item_from_row(row))
         return result
 
+class TroveNewspaperDataSource(DataSource):
+    def __init__(self, query):
+        self.query = query
+
+    def make_json(self):
+        t = troveNews(self.query)
+        print t
+        return t
+
 class TroveImageDataSource(DataSource):
     def __init__(self, query):
         self.query = query
@@ -483,11 +533,26 @@ class MockGraphDataSource(DataSource):
 
 class Data(tornado.web.RequestHandler):
     def get(self):
-        module_name = self.get_argument('module')
+        # GET parameters:
+        # module (preset module)
+        module_name = self.get_argument('module', None)
+
+        # custom topic
+        # q (query terms)
+        query_string = self.get_argument('q', None)
+        # start (start year)
+        start = self.get_argument('start', 1900)
+        # end (end year)
+        end = self.get_argument('end', 2013)
+        start, end = int(start), int(end)
+
         lat = self.get_argument('lat', None)
         lng = self.get_argument('lng', None)
 
-        data_sources = getDataSourceById(module_name, lat, lng)['data']
+        if module_name:
+            data_sources = getDataSourceById(module_name, lat, lng)['data']
+        else:
+            data_sources = getDataSourceByQuery(query_string, start, end, lat, lng)
 
         response = { 'items': [] }
         for ds in data_sources:
@@ -516,6 +581,7 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
 
 CAPITALS = ['Sydney', 'Melbourne', 'Adelaide', 'Canberra', 'Darwin', 'Perth', 'Brisbane', 'Hobart']
 STATES = ['ACT', 'Australia', 'NSW', 'NT', 'Qld', 'SA', 'Tas.', 'Vic.', 'WA']
+REGIONS = ["Oceania", "Europe","Asia", "Africa", "America"]
 
 
 class ABSDataSource(DataSource):
@@ -527,13 +593,20 @@ class ABSDataSource(DataSource):
         self.col = self.c.test[params['colname']]
         self.startyear, self.endyear = startyear, endyear
         self.params = params
+        self.aggregate = self.params.get('aggregate',{})
         self.filter = { 'year': { '$gt': self.startyear, '$lt': self.endyear } }
         self.filter.update(self.params.get('filter', {}))
 
     def make_json(self):
         #data = list(self.c.test.pop_capital.find({'capital': { '$in': CAPITALS }, 'year': { '$gt': self.startyear, '$lt': self.endyear } }))
         #data = list(self.col.find({'capital': { '$in': CAPITALS }, }))
-        data = list(self.col.find(self.filter))
+        data = []
+        if (self.aggregate):
+            #data = list(self.col.aggregate(self.aggregate))
+            data = self.col.aggregate(self.aggregate)
+            data = data['result']
+        else:
+            data = list(self.col.find(self.filter))
 
         #row = data[0]
         result = {
@@ -549,7 +622,6 @@ class ABSDataSource(DataSource):
         year_field = self.params.get('year_field', 'year')
 
         for e in data:
-            #data_per_year[str(e['year'])][e['capital']] = e['population']
             data_per_year[str(e[year_field])][e[x_item]] = e[y_item]
 
         # [ { year: y, melb: 19, syd: 20, adel: 21 ... } ]
@@ -573,6 +645,8 @@ class ABSDataSource(DataSource):
         result['ykeys'] = self.params.get('ykeys', [])
         result['labels'] = self.params.get('labels', result['ykeys'])
         return [result]
+
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application([

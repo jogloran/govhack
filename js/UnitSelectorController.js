@@ -26,5 +26,16 @@ function UnitSelectorController($scope, $rootScope, $dialog, $cookies) {
 		}
 
 	    $cookies.askedPermission = 'yes';
-	  };
+	};
+
+	$scope.createTopic = function() {
+		var dialog = $dialog.dialog({
+			templateUrl: '_create_topic_dialog.html',
+			controller: 'CreateTopicController',
+		})
+		.open()
+		.then(function(result) {
+
+		});
+	}
 }

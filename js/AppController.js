@@ -3,6 +3,55 @@ app.config(function ($dialogProvider) {
   $dialogProvider.options({backdropFade: true, dialogFade: true});
 });
 
+app.directive('ghSlider', function() {
+    return {
+      replace: true,
+      require: '?ngModel',
+      link: function(scope, elem, attrs, ngModel) {
+        function propChangeHandler(prop) {
+          return function(value, oldValue) {
+            // called when max,min expressions change
+            var slider = $(elem).slider('option', prop, value);
+            var modelValue = ngModel.$viewValue;
+
+            // if the model value is now beyond the new value, clamp it back
+            var extremum = slider.slider('option', prop);
+            
+            if (extremum) {
+              if ((prop === 'max' && modelValue > extremum)
+               || (prop === 'min' && modelValue < extremum)) {
+                ngModel.$setViewValue(extremum);
+              }
+            }
+          };
+        }
+        scope.$watch(attrs.max, propChangeHandler('max'));
+        scope.$watch(attrs.min, propChangeHandler('min'));
+
+        ngModel.$render = function() {
+          // called when the model variable changes
+          $(elem).slider('values', 0, ngModel.$viewValue[0]);
+          $(elem).slider('values', 1, ngModel.$viewValue[1]);
+        };
+
+        $(elem).slider({
+          range: true,
+          min: attrs.min,
+          max: attrs.max,
+          values: [attrs.min, attrs.max],
+          slide: function(event, ui) {
+            scope.$apply(function() {
+              var start = ui.values[0];
+              var end = ui.values[1];
+
+              ngModel.$setViewValue([start, end]);
+            });
+          }
+        });
+      },
+    }
+});
+
 app.directive('ghVerticalFluid', function() {
 	return function (scope, element, attrs) {
 	    $(element).css({'height':($(window).height() - 57 - 40)+'px'});
@@ -97,40 +146,41 @@ app.directive('ghTimelineGraph', function() {
 });
 
 function AppController($scope, $rootScope, $cookies, $dialog) {
+  var c = '#E07E43'
   $scope.modules = [{
     name: 'Present and Past',
     stage: [1, 1],
-    colour: '#16a085',
+    colour: c,
     id: 'family'
   },
   {
     name: 'Past in the Present',
     stage: [1, 2],
-    colour: '#2980b9',
+    colour: c,
     id: 'past'
   },
   {
     name: 'Community and Remembrance',
     stage: [2, 1],
-    colour: '#8e44ad',
+    colour: c,
     id: 'community'
   },
   {
     name: 'First Contact',
     stage: [2, 2],
-    colour: '#f39c12',
+    colour: c,
     id: 'contact'
   },
   {
     name: 'The Australian Colonies',
     stage: [3, 1],
-    colour: '#e74c3c',
+    colour: c,
     id: 'colonies'
     },  
     {
     name: 'Australia as a Nation',
     stage: [3, 2],
-    colour: '#16a085',
+    colour: c,
     id: 'nation',
   },
   ];
@@ -145,4 +195,12 @@ function AppController($scope, $rootScope, $cookies, $dialog) {
   $scope.currentLoadingMessageIndex = 0;
   $scope.loadingMessage = $scope.loadingMessages[$scope.currentLoadingMessageIndex];
   $scope.loadingLanguage = $scope.loadingLanguages[$scope.currentLoadingMessageIndex];
+
+  $scope.bodyStyleForUnit = function(unit) {
+    if (unit === -1) {
+      return { "background-color": "#a8a8a8" };
+    } else {
+      return { "background-color": "#323C46" };
+    }
+  }
 }
