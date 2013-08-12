@@ -662,7 +662,7 @@ if __name__ == '__main__':
         (r'/((?:fonts|css|js|stylesheets|images)/.+)', tornado.web.StaticFileHandler, { 'path': os.getcwd() }),
         (r'/(_.+)', StaticFileHandler, dict(path=os.getcwd())),
         (r'/(.+\.mp3)', StaticFileHandler, dict(path=os.getcwd())),
-    ], debug=True)
+    ])
 
     app.listen(8008)
     tornado.ioloop.IOLoop().instance().start()
