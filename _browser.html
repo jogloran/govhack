@@ -34,13 +34,8 @@
 	<div class="row-fluid">
 		<div class="span3 well" id='item-list-pane' gh-vertical-fluid>
 			<div class='nav nav-list' id="item-list">
-<<<<<<< HEAD
 				<div ng-show='items.length > 3' id='more-results' class='muted'><i class='icon-chevron-down'></i> Scroll down for more results <i class='icon-chevron-down'></i></div>
 				<div ng-repeat='item in items | orderBy:["type","start","title","url"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
-=======
-				<div ng-show='items.length > 3' id='more-results' class='muted'><i class='icon-chevron-down'></i> Scroll down for more <i class='icon-chevron-down'></i></div>
-				<div ng-repeat='item in items | orderBy:["start","title","url"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
->>>>>>> d985936cd8875db259f1c2550497b9dcb9d6ef8d
 					<div ng-class='{ selected: selectedIndex == $index }'>
 						<span class='pull-right added-icon added' ng-show='addedItems.indexOf(item) != -1' ng-animate='{ show: "zoom", hide: "unzoom" }'>
 							<i class="icon-plus"></i>
