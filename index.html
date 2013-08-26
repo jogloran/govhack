@@ -8,9 +8,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-cookies.min.js"></script>
-	<script src="http://ci.angularjs.org/job/angularui-bootstrap/ws/dist/ui-bootstrap-tpls-0.4.0-SNAPSHOT.js"></script>
+	<script src="js/ui-bootstrap-tpls-0.4.0.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 	<script src="js/bootstrap-affix.js"></script>
+
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 	<script src="http://timeline.verite.co/lib/timeline/js/storyjs-embed.js"></script>
 	<link href='fonts/stylesheet.css' rel='stylesheet' media='screen'></link>
@@ -25,7 +28,7 @@
 	height: 32px;
 }
 
-body {
+body, button {
 	font-family: 'Oswald';
 }
 
@@ -33,16 +36,52 @@ body {
 	background-color: #f4f4f4;
 	color: black;
 }
+
+#navbar-actions .btn {
+	color: #3f3f3f;
+	font-family: 'Oswald';
+
+	margin-right: 8px;
+}
+
+.navbar-search {
+	font-family: 'Oswald';
+}
+
+.navbar-search input {
+	font-family: 'Oswald';
+}
+
+.unit-selectors button {
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+.unit-selectors button {
+	 box-shadow: 20px 36px 55px rgba(0,0,0,0.4);
+}
+
+.unit-selectors button:hover {
+	-webkit-transform: scale(1.03);
+	-moz-transform: scale(1.03);
+	-ms-transform: scale(1.03);
+	-o-transform: scale(1.03);
+	transform: scale(1.03);
+}
 	</style>
 	<link rel="stylesheet" href="stylesheets/app.css"/>
 
 	<script src='js/AppController.js'></script>
 	<script src='js/BrowserController.js'></script>
+	<script src='js/CreateTopicController.js'></script>
 	<script src='js/UnitSelectorController.js'></script>
 	<script>
 	</script>
 </head>
-<body ng-controller='AppController' ng-app='App'>
+<body ng-controller='AppController' ng-app='App' ng-style='bodyStyleForUnit(currentUnit.unit)'>
 <div ng-show='appState.isLoading'>
 	<ng-include src="'_loading.html'"></ng-include>
 </div>

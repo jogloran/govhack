@@ -8,8 +8,8 @@
 				</div>
 			</div>
 			<div class="pull-right other-icons" id='navbar-actions'>
-				<a class='btn' ng-click='currentUnit.unit = -1'>See all modules</a>
-				<button class="btn btn-large btn-success" ng-click='displayDialog()'><i class="icon-book"></i></button>
+				<button class='btn btn-primary' ng-click='currentUnit.unit = -1' style='margin-right: 8px; color: white'>See all modules</button>
+				<button class="btn btn-success" ng-click='displayDialog()'><i class="icon-book"></i> Explore my timeline</button>
 				<div modal='timelineShown' close='close()'>
 					<div class="modal-body">
 						<div id="timeline-embed"></div>
@@ -35,7 +35,7 @@
 		<div class="span3 well" id='item-list-pane' gh-vertical-fluid>
 			<div class='nav nav-list' id="item-list">
 				<div ng-show='items.length > 3' id='more-results' class='muted'><i class='icon-chevron-down'></i> Scroll down for more results <i class='icon-chevron-down'></i></div>
-				<div ng-repeat='item in items | orderBy:["start","title","url"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
+				<div ng-repeat='item in items | orderBy:["type","start","title","url"] | filter:filterQuery' ng-animate='{ enter: "appear" }' ng-click='$parent.$parent.selectedIndex = $index'>
 					<div ng-class='{ selected: selectedIndex == $index }'>
 						<span class='pull-right added-icon added' ng-show='addedItems.indexOf(item) != -1' ng-animate='{ show: "zoom", hide: "unzoom" }'>
 							<i class="icon-plus"></i>
@@ -62,10 +62,10 @@
 			<div class="pull-right">
 				<div ng-switch='addedItems.indexOf(currentItem) == -1'>
 					<div ng-switch-when='true'>
-						<a class="btn btn-primary" ng-click='addedItems.push(currentItem); updateSelectedGraph();' id='add-to-timeline-button'><i class="icon-plus"></i> Add to timeline</a>
+						<button class="btn btn-primary" ng-click='addedItems.push(currentItem); updateSelectedGraph();' id='add-to-timeline-button'><i class="icon-plus"></i> Add to timeline</button>
 					</div>
 					<div ng-switch-default>
-						<a class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1); updateSelectedGraph();' id='remove-from-timeline-button'><i class="icon-minus"></i> Remove from timeline</a>
+						<button class="btn btn-warning" ng-click='addedItems.splice(addedItems.indexOf(currentItem), 1); updateSelectedGraph();' id='remove-from-timeline-button'><i class="icon-minus"></i> Remove from timeline</button>
 					</div>
 				</div>
 			</div>
