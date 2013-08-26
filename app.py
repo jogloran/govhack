@@ -259,14 +259,17 @@ def troveNews(query):
         current['title'] = item['title']
         current['subtitle'] = ''
         current['timestamp'] = ''
+	id = item['id'] #this is the ID we use for the next request
         if "identifier" in item:
             dict = item["identifier"]
             for id in dict:
                 #these only have 1 url, so we only add them if they actually have a url
-                current['url'] = id['value']
-            if 'linktype' in id:
-                if id['linktype'] == 'thumbnail':
-                    results.append(current)
+                #current['url'] = #id['value']
+            	if 'linktype' in id:
+                	if id['linktype'] == 'thumbnail':
+                    		results.append(current)
+
+	#http://trove.nla.gov.au/ndp/del/printArticleJpg/%@/6?print=n is the url
 
     return results
 
