@@ -16,6 +16,7 @@ topic='captain+cook'
 
 import flickrapi
 import re
+import requests
 
 import shlex
 
@@ -288,24 +289,31 @@ def get_year(s):
 def troveNews(query):
     work = queryTroveUrl('newspaper', query)
     results = []
+    print "printing work"
     print work
     for item in work:
         current = {}
         current['type'] = 'image'
-        current['title'] = item['title']
+	if 'title' in item:
+	    current['title'] = item['title']['value']
         current['subtitle'] = ''
-        current['timestamp'] = ''
+        current['start'] = item['date']
 	id = item['id'] #this is the ID we use for the next request
-        if "identifier" in item:
-            dict = item["identifier"]
-            for id in dict:
-                #these only have 1 url, so we only add them if they actually have a url
-                #current['url'] = #id['value']
-            	if 'linktype' in id:
-                	if id['linktype'] == 'thumbnail':
-                    		results.append(current)
-
-	#http://trove.nla.gov.au/ndp/del/printArticleJpg/%@/6?print=n is the url
+	print id
+	newsURL = "http://trove.nla.gov.au/ndp/del/printArticleJpg/" + str(id) + "/6?print=n"
+	r = requests.get(newsURL)
+	data = r.text
+	skimmedImage = re.search("<img id='articleImg' src='([^']+)'", data)
+	if skimmedImage is not None:
+	    partialImgURL = skimmedImage.group(1)
+	    if partialImgURL is not None:
+		imageURL = 'http://trove.nla.gov.au' + skimmedImage.group(1)
+		print imageURL
+		current['url'] = imageURL
+		current['thumbnail'] = imageURL
+		print current
+		results.append(current)
+	#print data
 
     return results
 
@@ -355,7 +363,7 @@ def queryFlickr(*terms):
 
 def queryTroveUrl(zone, searchTerms):
     results = []
-    for i in range(5):
+    for i in range(1):
         url = 'http://api.trove.nla.gov.au/result?key=5gj3f7pp9b5c0ath&zone='+zone+'&q='+searchTerms+'&encoding=json&s='+str(i*20)
         print "Trove URL: " + url
         data = json.load(urllib2.urlopen(url))
@@ -369,6 +377,10 @@ def queryTroveUrl(zone, searchTerms):
             	work = records['work']
             	for item in work:
                 	results.append(item)
+            if 'article' in records:
+		articles = records['article']
+                for item in articles:
+                        results.append(item)
 
     return results
 
