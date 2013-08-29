@@ -1,0 +1,21 @@
+<div class="modal-header">
+	<h3>Create a new topic</h3>
+</div>
+<div class="modal-body">
+	<p>
+		To explore pictures, graphs and media about an event in history, type some key words from that event.
+	</p>
+	<p>
+		<input type="text" ng-required='true' placeholder='Type some keywords here' ng-model='topicString'></input>
+		<p>Then choose a time period (a start year and an end year) to focus on: drag the first button to the start year, and the second button to the end year.</p>
+		<div class="row-fluid">
+			<div class="span1" style='text-align: right;'>{{year[0]}}</div>
+			<div class="span10"><div gh-slider min='1750' max='2013' ng-model='year'></div></div>
+			<div class="span1">{{year[1]}}</div>
+		</div>
+	</p>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-large btn-primary" data-dismiss="modal">Close</button>
+	<button class='btn btn-large btn-success' ng-click='submit()' ng-disabled='!topicString'>Submit</button>
+</div>
