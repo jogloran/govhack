@@ -287,7 +287,7 @@ def get_year(s):
     return None
 
 def troveNews(query):
-    work = queryTroveUrl('newspaper', query)
+    work = queryTroveUrl('newspaper', query, 5, 1)
     results = []
     print "printing work"
     print work
@@ -362,10 +362,10 @@ def queryFlickr(*terms):
     print 'results size:' + str(len(results))
     return results
 
-def queryTroveUrl(zone, searchTerms):
+def queryTroveUrl(zone, searchTerms, resultsPerPage = 20, numPages = 5):
     results = []
-    for i in range(1):
-        url = 'http://api.trove.nla.gov.au/result?key=5gj3f7pp9b5c0ath&zone='+zone+'&q='+searchTerms+'&encoding=json&s='+str(i*20)
+    for i in range(numPages):
+        url = 'http://api.trove.nla.gov.au/result?key=5gj3f7pp9b5c0ath&zone='+zone+'&q='+searchTerms+'&encoding=json&s='+str(i*resultsPerPage)+'&n='+str(resultsPerPage)
         print "Trove URL: " + url
         data = json.load(urllib2.urlopen(url))
         response = data['response']
