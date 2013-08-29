@@ -291,7 +291,8 @@ def troveNews(query):
     results = []
     print "printing work"
     print work
-    for item in work:
+    w = work[0:5]
+    for item in w:
         current = {}
         current['type'] = 'image'
 	if 'title' in item:
